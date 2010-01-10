@@ -15,5 +15,4 @@ io.o: io.c io.h
 	$(CC) $(INCL) $(ARCH) -g -c io.c -o $@
 
 clean:
-	rm -f *~ *.o 
-
+	rm -f *~ *.o main
