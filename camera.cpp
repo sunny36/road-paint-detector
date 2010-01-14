@@ -1,6 +1,6 @@
 #include "camera.h"
 
-CvMat getK(CvMat* K){	
+CvMat Camera::getK(CvMat* K){	
 	float f = 1563.0; 
 	float p_x = 640 / 2; 
 	float p_y = 480 / 2; 
@@ -17,7 +17,7 @@ CvMat getK(CvMat* K){
 	return *K;
 }
 
-CvMat getR(CvMat* R){
+CvMat Camera::getR(CvMat* R){
 /*
 Rx = 1        0               0
      0        cos(theta)      sin(theta)
@@ -38,7 +38,7 @@ Rx = 1        0               0
 	return *R;
 }
 
-CvMat getT(CvMat* T){	
+CvMat Camera::getT(CvMat* T){	
 /*
 World Co-ordinate system 
 	Z
@@ -62,7 +62,7 @@ World Co-ordinate system
 	return *T;
 }
 
-CvMat createP(CvMat* K, CvMat* R, CvMat* T){
+CvMat Camera::setP(CvMat* K, CvMat* R, CvMat* T){
 	CvMat* Rt = cvCreateMat(3, 4, CV_32FC1); //concatenates R and T
 	CvMat* P = cvCreateMat(3, 4, CV_32FC1);
 	int row, col;
@@ -82,6 +82,6 @@ CvMat createP(CvMat* K, CvMat* R, CvMat* T){
 	return *P;
 }
 
-float degreesToRadians(float degrees){
+float Camera::degreesToRadians(float degrees){
 	return (degrees * (3.14/180)); 
 }

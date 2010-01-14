@@ -1,4 +1,6 @@
-int convolve1D(int* in, int* out, int dataSize, int* kernel, int kernelSize){
+#include "convolution.h"
+
+int Convolution::convolve1D(int* in, int* out, int dataSize, int* kernel, int kernelSize){
     int i, j, k;
     // check validity of params
     if(!in || !out || !kernel) return -1;

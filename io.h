@@ -1,4 +1,8 @@
 #include <cv.h>
-#include <stdio.h>
 
-void printMatrixFloat(int rows, int cols, CvMat* matrix);
+class IO{
+	public:
+		void printMatrixFloat(int rows, int cols, CvMat* matrix);
+};
+
+
