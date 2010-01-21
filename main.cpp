@@ -1,22 +1,8 @@
-#include <stdio.h>
-#include <highgui.h>
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
-#include "io.h"
-#include "camera.h"
-#include "convolution.h"
-
-int calculateWidthInPixels(CvMat* P, float Y);
-float calculateY(CvMat* P, int current_row);
-
+#include "main.h"
 
 int main(int argc, char** argv){
+  IplImage* img = cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
 	cvNamedWindow("MIT Road Paint Detector", CV_WINDOW_AUTOSIZE);
-	CvCapture* capture = cvCreateFileCapture(argv[1]);
-	IplImage* frame;
-	IplImage* img = cvCreateImage(cvSize(640,480),IPL_DEPTH_8U,1);
 	
 	CvMat* P = cvCreateMat(3, 4, CV_32FC1); 
 	CvMat* K = cvCreateMat(3, 3, CV_32FC1);
@@ -24,82 +10,54 @@ int main(int argc, char** argv){
 	CvMat* T = cvCreateMat(3, 1, CV_32FC1);
 	
 	Camera camera;
-	*K = camera.getK(K);
-	
+	*K = camera.getK(K);	
 	*T = camera.getT(T);
 	*R = camera.getR(R);
 	*P = camera.setP(K, R, T);
 	float Y;
-	int row,j;
+	int row,j,k;
 	int w;
-	int *kernel;
+	float *kernel;
 	int shift_by;
-	int out[640];
-	int in[640];
+	float *out;
+	int* in;
 	CvScalar s;
 	int max=0;
 	Convolution convolution;
-	
-	while(1){
-		frame = cvQueryFrame(capture);
-		cvCvtColor(frame,img,CV_RGB2GRAY);
 		for(row = 0; row < img->height; row++){
 			Y = calculateY(P, row);
 			w = calculateWidthInPixels(P, Y);
-			
-			if(w<0){
-				w = 0; 
+			if(w < 1){
+				w = 0;
 			}
-			
-			kernel = (int *)calloc(sizeof(int),w*2);
-			
-			for(j=0; j< w*2; j++){
-				kernel[j] = -1;
-			}
-			// kernel[0] = 0;
-			// kernel[(w*2+2) -1] = 0;
-			shift_by = ceil(w/2);
-			for(j=0; j<w; j++){
-				kernel[j+shift_by] = 1;
-			}
-			
-			for(j=0; j<640; j++){
+			kernel = convolution.kernel1D(w);	    
+      in = (int*)calloc(sizeof(int), 640);
+  		for(j=0; j < img->width; j++){
 				s = cvGet2D(img, row, j);
 				in[j] = s.val[0];
 			}
-			
-			
-			convolution.convolve1D(in,out,640,kernel, w*2);
-			
-			for(j=0; j< 640; j++){
-				if(out[j]<0){ 
-					out[j] = 0;
-					s.val[0] = out[j];
+
+      out = (float*)calloc(sizeof(float), 640);
+			if(w > 0){
+				convolution.convolve1D(in,out,640,kernel, w*2+1);
+  			out[j] = (out[j]/(255*w))*255;
+				//localMaximaSuppression(out, 640);
+			}						
+			else{
+				//set all pixels of non-convoled rows to zero
+				for(j=0; j < img->width; j++){
+					out[j] = 0; 
 				}
-				else if(out[j]!=0){
-					s.val[0] = out[j];
-				}
-				
+			}
+			for(j=0; j< img->width; j++){
+				s.val[0] = out[j];
 				cvSet2D(img, row, j, s);			
 			}
-			
-			for(j = 1; j < 640 - 1; j = j++){
-				
-				s = cvGet2D(img, row, j);
-				if(s.val[0] < (cvGet2D(img, row, j-1)).val[0] && s.val[0] < (cvGet2D(img, row, j+1)).val[0] ){
-
-					s.val[0] =0.0;
-					cvSet2D(img, row, j, s);
-				} 
-				
-			}
-			
 		}
 		cvShowImage("MIT Road Paint Detector", img);     
-		char c = cvWaitKey(33);
-		if(c==27) break;
-	}
-	cvReleaseCapture(&capture); 
+
+		cvWaitKey(0);
+		cvReleaseImage(&img);
 	cvDestroyWindow("MIT Read Paint Detector");
 	return 0;
 }
@@ -136,24 +94,20 @@ int calculateWidthInPixels(CvMat* P, float Y){
 	cvmSet(X_2,3,0,1);
 	
 	cvMatMul(P_1,X_1,P_1_times_X_1);
-	cvMatMul(P_3,X_1,P_3_times_X_1);
-	
-	
+	cvMatMul(P_3,X_1,P_3_times_X_1);	
 	cvMatMul(P_1,X_2,P_1_times_X_2);
-	cvMatMul(P_3,X_2,P_3_times_X_2);
+	cvMatMul(P_3,X_2,P_3_times_X_2);	
 	
-	
-	
-	w = -((cvmGet(P_1_times_X_1,0,0) /
+	w = ((cvmGet(P_1_times_X_1,0,0) /
 		   cvmGet(P_3_times_X_1,0,0)
 		   ) 
 		  -
 		  (cvmGet(P_1_times_X_2,0,0) /
 		   cvmGet(P_3_times_X_2,0,0)
-		   )); //minus sign is for experiment
+		   )); 
 	
 	
-	return floor(w);
+	return round(w);
 }
 
 float calculateY(CvMat* P, int current_row){
@@ -165,7 +119,61 @@ float calculateY(CvMat* P, int current_row){
 	P_24 = cvmGet(P, 1,3);
 	P_32 = cvmGet(P, 2,1);
 	P_22 = cvmGet(P, 1,1);
-	Y = (current_row*P_34 - P_24) / (current_row*P_32 - P_22);		
+	Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
 	return Y;
 }
+
+void localMaximaSuppression(float image_row[], int row_size){
+	int i; 
+	float* image_row_suppressed;
+	image_row_suppressed = (float*)calloc(sizeof(float), row_size);
+	
+	for(i = 0; i < row_size; i++){
+		//first pixel
+		if(i == 0){ 
+			if(image_row[i] > image_row[i+1]){
+				image_row_suppressed[i] = image_row[i];
+				image_row_suppressed[i+1] = 0.0;
+			}
+			else if(image_row[i] < image_row[i+1]){
+				image_row_suppressed[i] = 0.0;
+				image_row_suppressed[i+1] = image_row[i];
+			}	
+		} 
+		
+		//pixels between first and last 
+		if(i > 0 && i < row_size - 1){
+			if(image_row[i] > image_row[i-1] && image_row[i] > image_row[i+1]){
+				image_row_suppressed[i] = image_row[i];
+				image_row_suppressed[i-1] = 0.0;
+				image_row_suppressed[i+1] = 0.0;
+			}
+			if(image_row[i] < image_row[i-1] && image_row[i] < image_row[i+1]){
+				image_row_suppressed[i] = 0.0;
+				image_row_suppressed[i-1] = image_row[i];
+				image_row_suppressed[i+1] = image_row[i];
+			}
+		}
+		
+		//last pixel
+		if( i == row_size - 1 ){
+			if(image_row[i] > image_row[i-1]){
+				image_row_suppressed[i] = image_row[i];
+			}
+			else if(image_row[i] < image_row[i-1]){
+				image_row_suppressed[i] = 0.0;
+			}				
+		}
+		
+	}
+	
+	//copy value from image_row_suppressed to image_row
+	for(i = 0; i < row_size; i++){
+		image_row[i] = image_row_suppressed[i];
+	}
+	free(image_row_suppressed);
+	return; 
+}
+
+
 

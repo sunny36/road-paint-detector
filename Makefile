@@ -3,7 +3,7 @@ INCL = -I/usr/local/include/opencv
 LIBS = -L/usr/local/lib -lcxcore -lcv -lhighgui -lcvaux -lml 
 ARCH = -arch i386
 
-main: main.cpp convolution.o camera.o io.o 
+main: main.cpp main.h convolution.o camera.o io.o 
 	$(CC) $(INCL) $(LIBS) $(ARCH) main.cpp convolution.o camera.o io.o -o main 
 
 convolution.o: convolution.cpp convolution.h
