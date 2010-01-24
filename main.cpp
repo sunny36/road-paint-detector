@@ -45,7 +45,7 @@ int main(int argc, char** argv){
 				// 	printf("%.1f ", out[j]);
 				// }
 				// printf("\n");
-				// normalization(out, 640);
+				   normalization(out, 640);
 				// for(j = 0; j < 640; j ++){
 				// 	printf("%.1f ", out[j]);
 				// }
