@@ -16,7 +16,6 @@ int Convolution::convolve1D(int* in, float* out, int dataSize,
 		temp_int[i] = in[0];
 	}
 	//center
-	
 	for(i = 0; i < 640; i++){
 		temp_int[i + (kernelSize-1)/2] = in[i];
 	}
@@ -57,35 +56,36 @@ int Convolution::convolve1D(int* in, float* out, int dataSize,
 }
 
 
-float* Convolution::kernel1D(int w){
+float* Convolution::kernel1D(int width){
   float* kernel;
   int left_of_plus_one, right_of_plus_one, left_edge, right_edge;
   int j,k;
+	//kernel[0] -> kernel[w*2]
+	kernel = (float *)calloc(sizeof(float), width * 2 + 1); 
   //check if lane width is odd or even 
-  if(w%2==0 && w!=0){
+  if((width % 2 == 0) && (width != 0)){
     //width is even
-    kernel = (float *)calloc(sizeof(float), w*2+1); //kernel[0] -> kernel[w*2]
-    kernel[w] = 1;
-    left_of_plus_one = right_of_plus_one = ((w/2)-1);
-    k = w; 
+    kernel[width] = 1;
+    left_of_plus_one = right_of_plus_one = ((width / 2) - 1);
+    k = width; 
     k = k + 1;
     for(j=0; j< right_of_plus_one; j++){
       kernel[k] = 1;
       k = k +1;
     }
-    k = w;
+    k = width;
     k = k -1;
     for(j=0; j< left_of_plus_one; j++){
       kernel[k] = 1;
       k = k -1;
     }
-    int left_edge = ((w/2)-1); 
-    int right_edge = ((w/2)-1); 
+    int left_edge = ((width / 2) - 1); 
+    int right_edge = ((width / 2) - 1); 
     for(j=0; j< left_edge; j++){
       kernel[j] = -1;
     }
     kernel[j] = -0.5; j++; kernel[j]=0; 
-    k = w*2+1;
+    k = width * 2 + 1;
     k = k-1;
     for(j=0; j < right_edge; j++){
       kernel[k] = -1; 
@@ -95,27 +95,26 @@ float* Convolution::kernel1D(int w){
   }
   else{
     //width is odd
-    kernel = (float *)calloc(sizeof(float), w*2+1);
-    kernel[w] = 1;
-    left_of_plus_one = right_of_plus_one = floor(w/2);
-    k = w; 
+    kernel[width] = 1;
+    left_of_plus_one = right_of_plus_one = floor(width / 2);
+    k = width; 
     k = k + 1;
     for(j=0; j< right_of_plus_one; j++){
       kernel[k] = 1;
       k = k +1;
     }
-    k = w;
+    k = width;
     k = k -1;
     for(j=0; j< right_of_plus_one; j++){
       kernel[k] = 1;
       k = k -1;
     }
-    left_edge = right_edge = floor(w/2);
+    left_edge = right_edge = floor(width / 2);
     for(j=0; j< left_edge; j++){
       kernel[j] = -1;
     }
     kernel[j]= -0.5; 
-    k = w*2 +1;
+    k = width * 2 + 1;
     k = k -1;
     for(j=0; j < right_edge; j++){
       kernel[k] = -1; 
@@ -126,6 +125,7 @@ float* Convolution::kernel1D(int w){
   return kernel;
 }
 
+/* NOT BEING USED */
 void Convolution::copyBorder(int* in, int kernel_width){
 	int *temp = NULL;
 	int i; 
