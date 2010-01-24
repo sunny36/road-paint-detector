@@ -1,9 +1,8 @@
-#include <stdio.h>
+#include <cstdio>
 #include <highgui.h>
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
 #include "io.h"
 #include "camera.h"
 #include "convolution.h"
