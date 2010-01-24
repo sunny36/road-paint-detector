@@ -3,28 +3,56 @@
 int Convolution::convolve1D(int* in, float* out, int dataSize, 
                             float* kernel, int kernelSize){
   int i, j, k;
+	float *temp_float; 
   // check validity of params
   if(!in || !out || !kernel) return -1;
   if(dataSize <=0 || kernelSize <= 0) return -1;
-  //start convolution from out[kernelSize-1] to out[dataSize-1] (last)
-  //copyBorder(in, kernelSize);
-  for(i = kernelSize-1; i < dataSize; ++i){
+  
+	int *temp_int = NULL;
+	int new_row_width = (640 + 2*(kernelSize - 1));
+	temp_int = (int*)calloc(sizeof(int), new_row_width);
+	//left edge
+	for(i = 0; i < (kernelSize-1)/2; i++){
+		temp_int[i] = in[0];
+	}
+	//center
+	
+	for(i = 0; i < 640; i++){
+		temp_int[i + (kernelSize-1)/2] = in[i];
+	}
+	//right edge 
+	for(i = 0; i < (kernelSize-1)/2; i++){
+		temp_int[i + (640 + (kernelSize - 1)/2)] = in[639];
+	}
+	in = (int*)realloc(in, sizeof(int) * (640 + (kernelSize -1)));
+	for(i = 0; i < (640 + (kernelSize - 1)); i++){
+		in[i] = temp_int[i]; 
+	}	
+	out = (float*)realloc(out, sizeof(float) * (640 + (kernelSize -1)));
+	//start convolution from out[kernelSize-1] to out[dataSize-1] (last)
+	dataSize += kernelSize;
+  for(i = kernelSize-1; i < (dataSize + (kernelSize-1)); ++i){
     out[i] = 0;                             // init to 0 before accumulate
     for(j = i, k = 0; k < kernelSize; --j, ++k){
       out[i] += in[j] * kernel[k];
     }	            
   }
-  //    convolution from out[0] to out[kernelSize-2]
+  //convolution from out[0] to out[kernelSize-2]
   for(i = 0; i < kernelSize - 1; ++i){
     out[i] = 0;                             // init to 0 before sum
     for(j = i, k = 0; j >= 0; --j, ++k){
       out[i] += in[j] * kernel[k];
     }            
   }
-
-  for(i = 0; i < dataSize; i++){
-    out[i] = out[i + kernelSize/2];
-  }
+	
+	temp_float = (float*)calloc(sizeof(float), 640);
+	for(i = 0; i < 640; i++){
+		temp_float[i] = out[i + ((kernelSize - 1))];
+	}
+	out = (float*)realloc(out, sizeof(float)*640); 
+	for(i = 0; i < 640; i++){
+		out[i] = temp_float[i];
+	}
   return 0;
 }
 
@@ -99,21 +127,41 @@ float* Convolution::kernel1D(int w){
 }
 
 void Convolution::copyBorder(int* in, int kernel_width){
-  IplImage* row = cvCreateImage(cvSize(640, 1), IPL_DEPTH_8U, 1); 
-  //in => row 
-  int i, j; 
-  for(j = 0; j < row->width; j++){
-    ((uchar*)(row->imageData + i*row->widthStep))[j] = in[j];
-  }
+	int *temp = NULL;
+	int i; 
+	int new_row_width = (640 + 2*(kernel_width - 1));
+	temp = (int*)calloc(sizeof(int), new_row_width);
+	//left edge
+	for(i = 0; i < (kernel_width-1)/2; i++){
+		temp[i] = in[0];
+	}
+	//center
+	
+	for(i = 0; i < 640; i++){
+		temp[i + (kernel_width-1)/2] = in[i];
+	}
+	//right edge 
+	for(i = 0; i < (kernel_width-1)/2; i++){
+		temp[i + (640 + (kernel_width - 1)/2)] = in[639];
+	}
 
-  IplImage* row_b = cvCreateImage(cvSize(640 + kernel_width, 1), IPL_DEPTH_8U, 1); 
-  CvPoint offset = cvPoint(kernel_width/2, 0); 
-  cvCopyMakeBorder(row, row_b, offset, IPL_BORDER_REPLICATE, cvScalarAll(0));
+	printf("kernel_width = %d\n", kernel_width);
+	// for(i = 0; i < (640 + (kernel_width - 1)/2); i++){
+	// 	printf("%d ", temp[i]);
+	// }
+	// printf("\n"); 
+	// printf("\n"); 
+	// for(i = 0; i < 640; i++){
+	// 	printf("%d ", in[i]);
+	// }
+	// printf("\n"); 
+	// printf("-------------------------------------------------------------------------------------\n");
 
-  i = 0; 
-  in = (int*)realloc(in, sizeof(int) * (640 + kernel_width));
-  for(j = 0; j < row_b->width; j++){
-    in[j] = ((uchar*)(row->imageData + i*row->widthStep))[j];
-  }  
+	in = (int*)realloc(in, sizeof(int) * (640 + (kernel_width -1)));
+	for(i = 0; i < (640 + (kernel_width - 1)); i++){
+		in[i] = temp[i]; 
+	}
+	
+	free(temp); 
   return; 
 }

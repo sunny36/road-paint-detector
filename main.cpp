@@ -1,4 +1,5 @@
 #include "main.h"
+void normalization(float out[], int n);
 
 int main(int argc, char** argv){
   IplImage* img = cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
@@ -40,8 +41,15 @@ int main(int argc, char** argv){
       out = (float*)calloc(sizeof(float), 640);
 			if(w > 0){
 				convolution.convolve1D(in,out,640,kernel, w*2+1);
-  			out[j] = (out[j]/(255*w))*255;
-				//localMaximaSuppression(out, 640);
+				// for(j = 0; j < 640; j ++){
+				// 	printf("%.1f ", out[j]);
+				// }
+				// printf("\n");
+				// normalization(out, 640);
+				// for(j = 0; j < 640; j ++){
+				// 	printf("%.1f ", out[j]);
+				// }
+				// printf("\n");
 			}						
 			else{
 				//set all pixels of non-convoled rows to zero
@@ -173,6 +181,26 @@ void localMaximaSuppression(float image_row[], int row_size){
 	}
 	free(image_row_suppressed);
 	return; 
+}
+
+void normalization(float out[], int n){
+	float max = 0.0;
+	int i; 
+	for(i = 0; i < n; i++){
+		if(out[i] > max) max = out[i];
+	}
+	for(i = 0; i < n; i++){
+		out[i] = out[i] / max;
+	}
+	for(i = 0; i < n; i++){
+		out[i] = (log(1+out[i])/log(2)*255);
+	}	
+	// for(i = 0; i < n; i++){
+	// 	if(out[i] < 1.0){
+	// 		out[i] = 0.0; 
+	// 	}
+	// }	
+	
 }
 
 
