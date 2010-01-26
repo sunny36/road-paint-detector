@@ -16,8 +16,7 @@ int main(int argc, char** argv){
 	*R = camera.getR(R);
 	*P = camera.setP(K, R, T);
 	float Y;
-	int row,j,k;
-	int w;
+	int row, j, k, width;
 	float *kernel;
 	int shift_by;
 	float *out;
@@ -27,11 +26,11 @@ int main(int argc, char** argv){
 	Convolution convolution;
 		for(row = 0; row < img->height; row++){
 			Y = calculateY(P, row);
-			w = calculateWidthInPixels(P, Y);
-			if(w < 1){
-				w = 0;
+			width = calculateWidthInPixels(P, Y);
+			if(width < ONE_PIXEL){
+				width = 0;
 			}
-			kernel = convolution.kernel1D(w);	    
+			kernel = convolution.kernel1D(width);	    
       in = (int*)calloc(sizeof(int), 640);
   		for(j=0; j < img->width; j++){
 				s = cvGet2D(img, row, j);
@@ -39,8 +38,8 @@ int main(int argc, char** argv){
 			}
 
       out = (float*)calloc(sizeof(float), 640);
-			if(w > 0){
-				convolution.convolve1D(in,out,640,kernel, w*2+1);
+			if(width > 0){
+				convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
 				// for(j = 0; j < 640; j ++){
 				// 	printf("%.1f ", out[j]);
 				// }
