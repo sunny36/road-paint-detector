@@ -2,6 +2,7 @@
 
 Camera::Camera(){
   K = cvCreateMat(3, 3, CV_32FC1);
+  R = cvCreateMat(3, 3, CV_32FC1);
 }
 
 CvMat* Camera::getK(){	
@@ -21,7 +22,7 @@ CvMat* Camera::getK(){
 	return K;
 }
 
-CvMat Camera::getR(CvMat* R){
+CvMat* Camera::getR(){
 /*
 Rx = 1        0               0
      0        cos(theta)      sin(theta)
@@ -39,7 +40,7 @@ Rx = 1        0               0
 	cvmSet(R, 2, 1, -sin(theta));
 	cvmSet(R, 2, 2, cos(theta));
 	
-	return *R;
+	return R;
 }
 
 CvMat Camera::getT(CvMat* T){	
