@@ -6,12 +6,10 @@ class Camera{
 
     void setK(float focal_lenght, int width, int height);
     CvMat* getK();
-
-    CvMat* getT();
-
     void setR(float theta);
     CvMat* getR(); 
-
+    void setT(float x, float y, float z);
+    CvMat* getT();
     CvMat setP(CvMat* K, CvMat* R, CvMat* T); 
   
   private:

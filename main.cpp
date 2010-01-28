@@ -6,12 +6,12 @@ int main(int argc, char** argv){
 	cvNamedWindow("MIT Road Paint Detector", CV_WINDOW_AUTOSIZE);
 	
 	CvMat* P = cvCreateMat(3, 4, CV_32FC1); 
-	CvMat *K, *R;
-  CvMat* T;
+	CvMat *K, *R, *T;
 
 	Camera camera;
   camera.setK(FOCAL_LENGTH, 640, 480);
   camera.setR(THETA);
+  camera.setT(X_WORLD, Y_WORLD, Z_WORLD);
 	K = camera.getK();	
 	T = camera.getT();
 	R = camera.getR();

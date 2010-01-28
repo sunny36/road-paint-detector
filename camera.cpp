@@ -9,15 +9,15 @@ Camera::Camera(){
 void Camera::setK(float focal_length, int width, int height){
  	float p_x = width / 2; 
 	float p_y = height / 2; 
-	*((float*)CV_MAT_ELEM_PTR(*K, 0, 0)) = focal_length;
-	*((float*)CV_MAT_ELEM_PTR(*K, 0, 1)) = 0;
-	*((float*)CV_MAT_ELEM_PTR(*K, 0, 2)) = p_x;
-	*((float*)CV_MAT_ELEM_PTR(*K, 1, 0)) = 0;
-	*((float*)CV_MAT_ELEM_PTR(*K, 1, 1)) = focal_length;
-	*((float*)CV_MAT_ELEM_PTR(*K, 1, 2)) = p_y;
-	*((float*)CV_MAT_ELEM_PTR(*K, 2, 0)) = 0;
-	*((float*)CV_MAT_ELEM_PTR(*K, 2, 1)) = 0;
-	*((float*)CV_MAT_ELEM_PTR(*K, 2, 2)) = 1;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 0, 0)) = focal_length;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 0, 1)) = 0;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 0, 2)) = p_x;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 1, 0)) = 0;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 1, 1)) = focal_length;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 1, 2)) = p_y;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 2, 0)) = 0;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 2, 1)) = 0;
+	*((float*)CV_MAT_ELEM_PTR(*(this->K), 2, 2)) = 1;
 
   return;
 }
@@ -34,15 +34,15 @@ Rx = 1        0               0
 */	
 	
 	theta = degreesToRadians(theta); // theta in radians
-	cvmSet(R, 0, 0, 1);
-	cvmSet(R, 0, 1, 0);
-	cvmSet(R, 0, 2, 0);
-	cvmSet(R, 1, 0, 0);
-	cvmSet(R, 1, 1, cos(theta));
-	cvmSet(R, 1, 2, sin(theta));
-	cvmSet(R, 2, 0, 0);
-	cvmSet(R, 2, 1, -sin(theta));
-	cvmSet(R, 2, 2, cos(theta));
+	cvmSet(this->R, 0, 0, 1);
+	cvmSet(this->R, 0, 1, 0);
+	cvmSet(this->R, 0, 2, 0);
+	cvmSet(this->R, 1, 0, 0);
+	cvmSet(this->R, 1, 1, cos(theta));
+	cvmSet(this->R, 1, 2, sin(theta));
+	cvmSet(this->R, 2, 0, 0);
+	cvmSet(this->R, 2, 1, -sin(theta));
+	cvmSet(this->R, 2, 2, cos(theta));
 	
   return;
 }
@@ -51,7 +51,7 @@ CvMat* Camera::getR(){
   return R;
 }
 
-CvMat* Camera::getT(){	
+void Camera::setT(float x, float y, float z){
 /*
 World Co-ordinate system 
 	Z
@@ -65,14 +65,15 @@ World Co-ordinate system
 	    \ X
 */
 
-	float x = 0.0; 
-	float y = 2.15; 
-	float z = 1.00;
-	cvmSet(T,0,0, x);
-	cvmSet(T,1,0, y);
-	cvmSet(T,2,0, z);	
-	
-	return T;
+  cvmSet(this->T,0,0, x);
+	cvmSet(this->T,1,0, y);
+	cvmSet(this->T,2,0, z);	
+  
+  return;
+}
+
+CvMat* Camera::getT(){	
+  return T;
 }
 
 CvMat Camera::setP(CvMat* K, CvMat* R, CvMat* T){
