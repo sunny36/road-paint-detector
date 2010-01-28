@@ -6,10 +6,6 @@ Camera::Camera(){
   T = cvCreateMat(3, 1, CV_32FC1);
 }
 
-CvMat* Camera::getK(){	
-	return K;
-}
-
 void Camera::setK(float focal_length, int width, int height){
  	float p_x = width / 2; 
 	float p_y = height / 2; 
@@ -26,13 +22,17 @@ void Camera::setK(float focal_length, int width, int height){
   return;
 }
 
-CvMat* Camera::getR(){
+CvMat* Camera::getK(){	
+	return K;
+}
+
+void Camera::setR(float theta){
 /*
 Rx = 1        0               0
      0        cos(theta)      sin(theta)
      0        -sinc(theta)    cos(theta)
 */	
-	float theta = 90; //degrees 
+	
 	theta = degreesToRadians(theta); // theta in radians
 	cvmSet(R, 0, 0, 1);
 	cvmSet(R, 0, 1, 0);
@@ -44,7 +44,11 @@ Rx = 1        0               0
 	cvmSet(R, 2, 1, -sin(theta));
 	cvmSet(R, 2, 2, cos(theta));
 	
-	return R;
+  return;
+}
+
+CvMat* Camera::getR(){
+  return R;
 }
 
 CvMat* Camera::getT(){	

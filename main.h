@@ -9,7 +9,9 @@
 
 /* Constants */
 const int ONE_PIXEL = 1; 
+/*Camera Parameters */
 float FOCAL_LENGTH = 1563.0; 
+float THETA = 90; //degrees 
 
 /* Functions */ 
 int calculateWidthInPixels(CvMat* P, float Y);
