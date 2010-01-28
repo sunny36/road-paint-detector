@@ -3,6 +3,7 @@
 Camera::Camera(){
   K = cvCreateMat(3, 3, CV_32FC1);
   R = cvCreateMat(3, 3, CV_32FC1);
+  T = cvCreateMat(3, 1, CV_32FC1);
 }
 
 CvMat* Camera::getK(){	
@@ -43,7 +44,7 @@ Rx = 1        0               0
 	return R;
 }
 
-CvMat Camera::getT(CvMat* T){	
+CvMat* Camera::getT(){	
 /*
 World Co-ordinate system 
 	Z
@@ -64,7 +65,7 @@ World Co-ordinate system
 	cvmSet(T,1,0, y);
 	cvmSet(T,2,0, z);	
 	
-	return *T;
+	return T;
 }
 
 CvMat Camera::setP(CvMat* K, CvMat* R, CvMat* T){
