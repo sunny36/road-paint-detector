@@ -9,6 +9,7 @@
 
 /* Constants */
 const int ONE_PIXEL = 1; 
+float FOCAL_LENGTH = 1563.0; 
 
 /* Functions */ 
 int calculateWidthInPixels(CvMat* P, float Y);

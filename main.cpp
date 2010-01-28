@@ -10,6 +10,7 @@ int main(int argc, char** argv){
   CvMat* T;
 
 	Camera camera;
+  camera.setK(FOCAL_LENGTH, 640, 480);
 	K = camera.getK();	
 	T = camera.getT();
 	R = camera.getR();

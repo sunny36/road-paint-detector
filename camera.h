@@ -3,6 +3,7 @@
 class Camera{
   public:
     Camera();
+    void setK(float focal_lenght, int width, int height);
     CvMat* getK();
     CvMat* getT(); 
     CvMat* getR(); 

@@ -7,20 +7,23 @@ Camera::Camera(){
 }
 
 CvMat* Camera::getK(){	
-	float f = 1563.0; 
-	float p_x = 640 / 2; 
-	float p_y = 480 / 2; 
-	*((float*)CV_MAT_ELEM_PTR(*K, 0, 0)) = f;
+	return K;
+}
+
+void Camera::setK(float focal_length, int width, int height){
+ 	float p_x = width / 2; 
+	float p_y = height / 2; 
+	*((float*)CV_MAT_ELEM_PTR(*K, 0, 0)) = focal_length;
 	*((float*)CV_MAT_ELEM_PTR(*K, 0, 1)) = 0;
 	*((float*)CV_MAT_ELEM_PTR(*K, 0, 2)) = p_x;
 	*((float*)CV_MAT_ELEM_PTR(*K, 1, 0)) = 0;
-	*((float*)CV_MAT_ELEM_PTR(*K, 1, 1)) = f;
+	*((float*)CV_MAT_ELEM_PTR(*K, 1, 1)) = focal_length;
 	*((float*)CV_MAT_ELEM_PTR(*K, 1, 2)) = p_y;
 	*((float*)CV_MAT_ELEM_PTR(*K, 2, 0)) = 0;
 	*((float*)CV_MAT_ELEM_PTR(*K, 2, 1)) = 0;
 	*((float*)CV_MAT_ELEM_PTR(*K, 2, 2)) = 1;
-	
-	return K;
+
+  return;
 }
 
 CvMat* Camera::getR(){
