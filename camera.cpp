@@ -1,6 +1,10 @@
 #include "camera.h"
 
-CvMat Camera::getK(CvMat* K){	
+Camera::Camera(){
+  K = cvCreateMat(3, 3, CV_32FC1);
+}
+
+CvMat* Camera::getK(){	
 	float f = 1563.0; 
 	float p_x = 640 / 2; 
 	float p_y = 480 / 2; 
@@ -14,7 +18,7 @@ CvMat Camera::getK(CvMat* K){
 	*((float*)CV_MAT_ELEM_PTR(*K, 2, 1)) = 0;
 	*((float*)CV_MAT_ELEM_PTR(*K, 2, 2)) = 1;
 	
-	return *K;
+	return K;
 }
 
 CvMat Camera::getR(CvMat* R){

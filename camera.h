@@ -2,11 +2,13 @@
 
 class Camera{
   public:
-    CvMat getK(CvMat* K);
+    Camera();
+    CvMat* getK();
     CvMat getT(CvMat* T); 
     CvMat getR(CvMat* R); 
     CvMat setP(CvMat* K, CvMat* R, CvMat* T); 
   
   private:
+    CvMat *K;
     float degreesToRadians(float degrees);
 };
