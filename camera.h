@@ -3,18 +3,18 @@
 class Camera{
   public:
     Camera();
-
     void setK(float focal_lenght, int width, int height);
-    CvMat* getK();
     void setR(float theta);
-    CvMat* getR(); 
     void setT(float x, float y, float z);
-    CvMat* getT();
-    CvMat setP(CvMat* K, CvMat* R, CvMat* T); 
+    CvMat* getP(); 
   
   private:
     CvMat *K;
     CvMat *R;
     CvMat *T;
+    CvMat *P;
+    CvMat* getK();
+    CvMat* getR(); 
+    CvMat* getT();
     float degreesToRadians(float degrees);
 };

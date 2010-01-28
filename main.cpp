@@ -3,19 +3,15 @@ void normalization(float out[], int n);
 
 int main(int argc, char** argv){
   IplImage* img = cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
-	cvNamedWindow("MIT Road Paint Detector", CV_WINDOW_AUTOSIZE);
-	
-	CvMat* P = cvCreateMat(3, 4, CV_32FC1); 
-	CvMat *K, *R, *T;
+	cvNamedWindow("MIT Road Paint Detector", CV_WINDOW_AUTOSIZE); 
 
+  /* camera matrix set up */
 	Camera camera;
   camera.setK(FOCAL_LENGTH, 640, 480);
   camera.setR(THETA);
   camera.setT(X_WORLD, Y_WORLD, Z_WORLD);
-	K = camera.getK();	
-	T = camera.getT();
-	R = camera.getR();
-	*P = camera.setP(K, R, T);
+  CvMat *P = camera.getP();
+
 	float Y;
 	int row, j, k, width;
 	float *kernel;

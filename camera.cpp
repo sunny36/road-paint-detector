@@ -4,6 +4,7 @@ Camera::Camera(){
   K = cvCreateMat(3, 3, CV_32FC1);
   R = cvCreateMat(3, 3, CV_32FC1);
   T = cvCreateMat(3, 1, CV_32FC1);
+  P = cvCreateMat(3, 4, CV_32FC1);
 }
 
 void Camera::setK(float focal_length, int width, int height){
@@ -76,7 +77,11 @@ CvMat* Camera::getT(){
   return T;
 }
 
-CvMat Camera::setP(CvMat* K, CvMat* R, CvMat* T){
+CvMat* Camera::getP(){
+  CvMat *K, *R, *T; 
+  K = this->getK();
+  R = this->getR(); 
+  T = this->getT();
 	CvMat* Rt = cvCreateMat(3, 4, CV_32FC1); //concatenates R and T
 	CvMat* P = cvCreateMat(3, 4, CV_32FC1);
 	int row, col;
@@ -93,7 +98,7 @@ CvMat Camera::setP(CvMat* K, CvMat* R, CvMat* T){
 	}
 	
 	cvMatMul(K, Rt, P);
-	return *P;
+	return P;
 }
 
 float Camera::degreesToRadians(float degrees){
