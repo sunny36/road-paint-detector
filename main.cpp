@@ -15,11 +15,9 @@ int main(int argc, char** argv){
 	float Y;
 	int row, j, k, width;
 	float *kernel;
-	int shift_by;
 	float *out;
 	int* in;
 	CvScalar s;
-	int max=0;
 	Convolution convolution;
 		for(row = 0; row < img->height; row++){
 			Y = calculateY(P, row);
