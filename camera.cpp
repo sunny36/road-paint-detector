@@ -104,3 +104,16 @@ CvMat* Camera::getP(){
 float Camera::degreesToRadians(float degrees){
 	return (degrees * (3.14/180)); 
 }
+
+float Camera::calculateY(int current_row){
+	float Y=0, P_34=0, P_24=0, P_32=0, P_22=0;
+	/*
+	 Y = (v*P34 - P24) / (v*P32 - P22)
+	 */
+	P_34 = cvmGet(this->P, 2,3);
+	P_24 = cvmGet(this->P, 1,3);
+	P_32 = cvmGet(this->P, 2,1);
+	P_22 = cvmGet(this->P, 1,1);
+	Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
+	return Y;
+}

@@ -7,6 +7,7 @@ class Camera{
     void setR(float theta);
     void setT(float x, float y, float z);
     CvMat* getP(); 
+    float calculateY(int current_row);
   
   private:
     CvMat *K;

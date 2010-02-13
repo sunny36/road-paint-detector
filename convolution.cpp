@@ -63,7 +63,7 @@ float* Convolution::kernel1D(int width){
 	//kernel[0] -> kernel[w*2]
 	kernel = (float *)calloc(sizeof(float), width * 2 + 1); 
   //check if lane width is odd or even 
-  if((width % 2 == 0) && (width != 0)){
+  if(isEven(width)){
     //width is even
     kernel[width] = 1;
     left_of_plus_one = right_of_plus_one = ((width / 2) - 1);
@@ -125,6 +125,10 @@ float* Convolution::kernel1D(int width){
   return kernel;
 }
 
+bool Convolution::isEven(int width){
+	return (width % 2 == 0) ? true : false; 
+}
+
 /* NOT BEING USED */
 void Convolution::copyBorder(int* in, int kernel_width){
 	int *temp = NULL;
@@ -146,17 +150,6 @@ void Convolution::copyBorder(int* in, int kernel_width){
 	}
 
 	printf("kernel_width = %d\n", kernel_width);
-	// for(i = 0; i < (640 + (kernel_width - 1)/2); i++){
-	// 	printf("%d ", temp[i]);
-	// }
-	// printf("\n"); 
-	// printf("\n"); 
-	// for(i = 0; i < 640; i++){
-	// 	printf("%d ", in[i]);
-	// }
-	// printf("\n"); 
-	// printf("-------------------------------------------------------------------------------------\n");
-
 	in = (int*)realloc(in, sizeof(int) * (640 + (kernel_width -1)));
 	for(i = 0; i < (640 + (kernel_width - 1)); i++){
 		in[i] = temp[i]; 
