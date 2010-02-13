@@ -37,15 +37,7 @@ int main(int argc, char** argv){
       out = (float*)calloc(sizeof(float), 640);
 			if(width > 0){
 				convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
-				// for(j = 0; j < 640; j ++){
-				// 	printf("%.1f ", out[j]);
-				// }
-				// printf("\n");
-				   normalization(out, 640);
-				// for(j = 0; j < 640; j ++){
-				// 	printf("%.1f ", out[j]);
-				// }
-				// printf("\n");
+				normalization(out, 640);
 			}						
 			else{
 				//set all pixels of non-convoled rows to zero
@@ -191,12 +183,11 @@ void normalization(float out[], int n){
 	for(i = 0; i < n; i++){
 		out[i] = (log(1+out[i])/log(2)*255);
 	}	
-	// for(i = 0; i < n; i++){
-	// 	if(out[i] < 1.0){
-	// 		out[i] = 0.0; 
-	// 	}
-	// }	
-	
+	for(i = 0; i < n; i++){
+		if(out[i] < 1.0){
+			out[i] = 0.0; 
+		}
+	}		
 }
 
 
