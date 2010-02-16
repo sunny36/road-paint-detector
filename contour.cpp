@@ -34,29 +34,35 @@ void Contour::findContours(IplImage* image){
 }
 
 IplImage* Contour::drawContours(){
-      CvSeq* c = contours;
+  CvSeq* c = contours;
 
-    for(; c != NULL; c = (CvSeq*)(c->h_next)){
+  for(; c != NULL; c = (CvSeq*)(c->h_next)){
 
-      //printf("number = %d\n", c->total);
-      if(c->total < 4){       
-        if(c->h_prev){
-          c->h_prev->h_next = c->h_next;
-        } 
-        else{
-          contours = c->h_next;
-        }
-        if(c->h_next){
-          c->h_next->h_prev = c->h_prev;
-        }
+    //printf("number = %d\n", c->total);
+    if(c->total < 2){       
+      if(c->h_prev){
+        c->h_prev->h_next = c->h_next;
       } 
-    }
-int i =0;
-for(CvSeq* c = contours; c!=NULL; c=c->h_next){
-  i++;
-}
+      else{
+        contours = c->h_next;
+      }
+      if(c->h_next){
+        c->h_next->h_prev = c->h_prev;
+      }
+    } 
+  }
+  int i =0;
+  for(CvSeq* c = contours; c!=NULL; c=c->h_next){
+    i++;
+  }
+  
+  IplImage* image = cvCreateImage(cvSize(640, 480), 8 , 1);
+  cvDrawContours(image, contours, cvScalar(255), cvScalar(255), 100); 
 
-printf("number of contours = %d\n", i);
+  cvNamedWindow("debug", CV_WINDOW_AUTOSIZE); 
+  
+  cvShowImage("debug", image);     
+  printf("number of contours = %d\n", i);
   cvDrawContours(copied_image, contours, cvScalar(255), cvScalar(255), 100); 
   return copied_image;
 }

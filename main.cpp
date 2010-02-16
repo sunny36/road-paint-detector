@@ -1,9 +1,14 @@
 #include "main.h"
 
+void mouseCallbackFunc(int event, int x, int y, int flags, void* param){
+  if(event == CV_EVENT_LBUTTONDOWN){
+    fprintf(stderr, "x = %d, y = %d\n", x, y);
+  }
+}
 int main(int argc, char** argv){
   IplImage* img = cvLoadImage(argv[1], CV_LOAD_IMAGE_GRAYSCALE);
   cvNamedWindow("MIT Road Paint Detector", CV_WINDOW_AUTOSIZE); 
-
+  cvSetMouseCallback("MIT Road Paint Detector", mouseCallbackFunc);
   /* camera matrix set up */
   Camera camera;
   camera.setK(FOCAL_LENGTH, 640, 480);
