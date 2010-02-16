@@ -119,7 +119,7 @@ float Camera::calculateY(int current_row){
 }
 
 
-CvPoint Camera::imageToGroundPlane(CvPoint pt){
+CvPoint2D32f Camera::imageToGroundPlane(CvPoint pt){
 /*
        | p_11 p_12 p_14 |
   H =  | p_21 p_22 p_24 |
@@ -165,5 +165,5 @@ CvPoint Camera::imageToGroundPlane(CvPoint pt){
   /*io.printMatrixFloat(ground_point, ground_point->rows, ground_point->cols);*/
   /*printf("\n");*/
  
-  return cvPoint(cvmGet(ground_point, 0, 0), cvmGet(ground_point, 1, 0));
+  return cvPoint2D32f(cvmGet(ground_point, 0, 0), cvmGet(ground_point, 1, 0));
 }

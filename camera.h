@@ -9,7 +9,7 @@ class Camera{
     void setT(float x, float y, float z);
     CvMat* getP(); 
     float calculateY(int current_row);
-    CvPoint imageToGroundPlane(CvPoint pt);
+    CvPoint2D32f imageToGroundPlane(CvPoint pt);
 
   private:
     CvMat *K;
