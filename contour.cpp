@@ -19,6 +19,7 @@ void Contour::findContours(IplImage* image){
 #if defined(DEBUG)
     printf("number of contours = %d\n", number_of_contours);
 #endif
+<<<<<<< HEAD
     int n=0;
     int i;
     for (CvSeq* c = contours; c!=NULL; c=c->h_next) {
