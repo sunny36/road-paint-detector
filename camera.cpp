@@ -117,3 +117,53 @@ float Camera::calculateY(int current_row){
 	Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
 	return Y;
 }
+
+
+CvPoint Camera::imageToGroundPlane(CvPoint pt){
+/*
+       | p_11 p_12 p_14 |
+  H =  | p_21 p_22 p_24 |
+       | p_31 p_32 p_34 |
+       
+*/
+  CvMat *H = cvCreateMat( 3, 3, CV_32FC1); 
+  //copy col 1 and 2 from K to H
+  int row, col; 
+  CvMat* P = getP();
+  for(row = 0; row < P->rows ; row++){
+    for(col = 0; col < 2; col++){
+      cvmSet(H, row, col, cvmGet(P, row, col));
+    }
+  }
+  //copy col 4 from K to H
+  for(row = 0; row < P->rows; row++){
+    cvmSet(H, row, 2, cvmGet(P, row, 3));
+  }
+#if defined(DEBUG)
+  IO io;
+  io.printMatrixFloat(P, P->rows, P->cols);
+  printf("\n");
+  io.printMatrixFloat(H, H->rows, H->cols);
+#endif
+
+  CvMat *H_inv = cvCreateMat( 3, 3, CV_32FC1); 
+  cvInv(H, H_inv); 
+
+  CvMat *image_point = cvCreateMat(3, 1, CV_32FC1);
+  cvmSet(image_point, 0, 0, pt.x);
+  cvmSet(image_point, 1, 0, pt.y);
+  cvmSet(image_point, 2, 0, 1);
+
+  CvMat *ground_point = cvCreateMat(3, 1, CV_32FC1);
+  cvMatMul(H_inv, image_point, ground_point);
+
+  /*IO io;*/
+  /*io.printMatrixFloat(P, P->rows, P->cols);*/
+  /*printf("\n");*/
+  /*io.printMatrixFloat(H, H->rows, H->cols);*/
+  /*printf("\n");*/
+  /*io.printMatrixFloat(ground_point, ground_point->rows, ground_point->cols);*/
+  /*printf("\n");*/
+ 
+  return cvPoint(cvmGet(ground_point, 0, 0), cvmGet(ground_point, 1, 0));
+}

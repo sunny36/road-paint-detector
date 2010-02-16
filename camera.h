@@ -1,4 +1,5 @@
 #include <cv.h>
+#include "io.h"
 
 class Camera{
   public:
@@ -8,7 +9,8 @@ class Camera{
     void setT(float x, float y, float z);
     CvMat* getP(); 
     float calculateY(int current_row);
-  
+    CvPoint imageToGroundPlane(CvPoint pt);
+
   private:
     CvMat *K;
     CvMat *R;
