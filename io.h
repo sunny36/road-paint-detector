@@ -1,8 +1,11 @@
+#ifndef IO_H
+#define IO_H
+
 #include <cv.h>
 
 class IO{
 	public:
-		void printMatrixFloat(int rows, int cols, CvMat* matrix);
+		void printMatrixFloat(CvMat* matrix, int rows, int cols);
 };
 
-
+#endif
