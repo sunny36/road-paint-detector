@@ -2,6 +2,7 @@
 #include <cv.h>
 #include "debug.h"
 #include <fstream>
+#include <string>
 
 class Contour{
 
@@ -16,5 +17,9 @@ class Contour{
   	CvMemStorage* storage;
 	  CvSeq* contours; 
     IplImage* copied_image;
-    void printContours(CvSeq* contours);
+    void printContours(CvSeq* contours, 
+                       int number_of_contours,
+                       std::string filename);
+    void removeUnwantedContour();
+    void removeDuplicatesInContours(CvSeq* contours);
 };

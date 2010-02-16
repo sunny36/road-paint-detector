@@ -15,7 +15,10 @@ int main(int argc, char** argv){
   camera.setK(FOCAL_LENGTH, 640, 480);
   camera.setR(THETA);
   camera.setT(X_WORLD, Y_WORLD, Z_WORLD);
+
   CvMat *P = camera.getP();
+  CvPoint2D32f point = camera.imageToGroundPlane(cvPoint(1,1));
+  printf("x = %f, %f, \n", point.x, point.y);
 
   float Y;
   int row, j, k, width;
@@ -81,6 +84,7 @@ int main(int argc, char** argv){
   contour.findContours(img);
   img = contour.drawContours();
   cvShowImage("MIT Road Paint Detector", img);     
+
   cvWaitKey(0);
   cvReleaseImage(&img);
   cvDestroyWindow("MIT Read Paint Detector");
