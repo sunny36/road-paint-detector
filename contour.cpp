@@ -19,10 +19,44 @@ void Contour::findContours(IplImage* image){
 #if defined(DEBUG)
     printf("number of contours = %d\n", number_of_contours);
 #endif
- 
+    int n=0;
+    int i;
+    for (CvSeq* c = contours; c!=NULL; c=c->h_next) {
+      printf("Contour #%d\n", n);
+      printf(" %d elements:\n", c->total);
+      for (i = 0; i < c->total; i++) {
+        CvPoint* p = CV_GET_SEQ_ELEM(CvPoint, c, i);
+        printf("   (%d,%d)\n", p->x, p->y);
+      }
+     n++;
+    }
+
 }
 
 IplImage* Contour::drawContours(){
+      CvSeq* c = contours;
+
+    for(; c != NULL; c = (CvSeq*)(c->h_next)){
+
+      //printf("number = %d\n", c->total);
+      if(c->total < 4){       
+        if(c->h_prev){
+          c->h_prev->h_next = c->h_next;
+        } 
+        else{
+          contours = c->h_next;
+        }
+        if(c->h_next){
+          c->h_next->h_prev = c->h_prev;
+        }
+      } 
+    }
+int i =0;
+for(CvSeq* c = contours; c!=NULL; c=c->h_next){
+  i++;
+}
+
+printf("number of contours = %d\n", i);
   cvDrawContours(copied_image, contours, cvScalar(255), cvScalar(255), 100); 
   return copied_image;
 }
