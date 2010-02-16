@@ -13,8 +13,8 @@ void Contour::findContours(IplImage* image){
                                           storage, 
                                           &contours, 
                                           sizeof(CvContour), 
-                                          CV_RETR_LIST, 
-                                          CV_CHAIN_APPROX_NONE	
+                                          CV_RETR_CCOMP, 
+                                          CV_CHAIN_APPROX_SIMPLE
                                         );
 #if defined(DEBUG)
     printf("number of contours = %d\n", number_of_contours);
