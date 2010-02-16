@@ -1,6 +1,7 @@
 #include <highgui.h>
 #include <cv.h>
 #include "debug.h"
+#include <fstream>
 
 class Contour{
 
@@ -15,4 +16,5 @@ class Contour{
   	CvMemStorage* storage;
 	  CvSeq* contours; 
     IplImage* copied_image;
+    void printContours(CvSeq* contours);
 };

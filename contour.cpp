@@ -13,24 +13,13 @@ void Contour::findContours(IplImage* image){
                                           storage, 
                                           &contours, 
                                           sizeof(CvContour), 
-                                          CV_RETR_CCOMP, 
-                                          CV_CHAIN_APPROX_SIMPLE
+                                          CV_RETR_LIST, 
+                                          CV_CHAIN_APPROX_NONE
                                         );
 #if defined(DEBUG)
     printf("number of contours = %d\n", number_of_contours);
 #endif
-    int n=0;
-    int i;
-    for (CvSeq* c = contours; c!=NULL; c=c->h_next) {
-      printf("Contour #%d\n", n);
-      printf(" %d elements:\n", c->total);
-      for (i = 0; i < c->total; i++) {
-        CvPoint* p = CV_GET_SEQ_ELEM(CvPoint, c, i);
-        printf("   (%d,%d)\n", p->x, p->y);
-      }
-     n++;
-    }
-
+    printContours(contours);
 }
 
 IplImage* Contour::drawContours(){
@@ -67,3 +56,16 @@ IplImage* Contour::drawContours(){
   return copied_image;
 }
 
+void Contour::printContours(CvSeq* contours){
+    int i, n= 0;
+    std::ofstream out("contours.txt");
+    for (CvSeq* c = contours; c!=NULL; c=c->h_next) {
+      out << "Contour #" << n << std::endl;
+      out << c->total << " elements:" << std::endl;
+      for (i = 0; i < c->total; i++) {
+        CvPoint* p = CV_GET_SEQ_ELEM(CvPoint, c, i);        
+        out << "(" << p->x << "," << p->y << ")" << std::endl; 
+      }
+     n++;
+    }
+}
