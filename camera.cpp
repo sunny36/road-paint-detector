@@ -31,7 +31,7 @@ void Camera::setR(float theta){
 /*
 Rx = 1        0               0
      0        cos(theta)      sin(theta)
-     0        -sinc(theta)    cos(theta)
+     0        -sin(theta)    cos(theta)
 */	
 	
 	theta = degreesToRadians(theta); // theta in radians
