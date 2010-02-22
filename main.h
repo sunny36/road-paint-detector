@@ -1,3 +1,6 @@
+#ifndef MAIN_H
+#define MAIN_H
+
 #include <cstdio>
 #include <highgui.h>
 #include <cmath>
@@ -26,4 +29,4 @@ void localMaximaSuppression(float image_row[], int row_size);
 void normalization(float out[], int n, int lane_width);
 void plotGraph(const char* filename);
 
-
+#endif

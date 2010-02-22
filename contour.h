@@ -1,3 +1,6 @@
+#ifndef CONTOUR_H
+#define CONTOUR_H
+
 #include <highgui.h>
 #include <cv.h>
 #include "debug.h"
@@ -23,3 +26,5 @@ class Contour{
     void removeUnwantedContour();
     void removeDuplicatesInContours(CvSeq* contours);
 };
+
+#endif

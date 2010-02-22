@@ -1,3 +1,6 @@
+#ifndef CAMERA_H
+#define CAMERA_H
+
 #include <cv.h>
 #include "io.h"
 
@@ -21,3 +24,5 @@ class Camera{
     CvMat* getT();
     float degreesToRadians(float degrees);
 };
+
+#endif

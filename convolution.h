@@ -1,3 +1,6 @@
+#ifndef CONVOLUTION_H
+#define CONVOLUTION_H
+
 #include <stdlib.h>
 #include <math.h>
 #include <highgui.h>
@@ -9,11 +12,8 @@ class Convolution{
 										 int kernelSize);
 			float* kernel1D(int w);
   private:
-		// const int PLUS_ONE = 1; 
-		// const int MINUS_ONE = -1; 
-		// const float PLUS_ZERO_POINT_FIVE = 0.5; 
-		// const float MINUS_ZERO_POINT_FIVE = 0.5; 
     void copyBorder(int* in, int kernel_width);
 		bool isEven(int width);
 };
 
+#endif
