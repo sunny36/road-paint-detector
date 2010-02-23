@@ -9,7 +9,7 @@ debug: CXX += -DDEBUG -g
 debug: all 
 	
 main: main.cpp main.h contour.o convolution.o camera.o io.o 
-	$(CXX) $(INCL) $(LIBS) $(ARCH) main.cpp convolution.o camera.o io.o contour.o -o main 
+	$(CXX) $(INCL) $(LIBS) $(ARCH) $^ -o $@
 
 contour.o: contour.cpp contour.h
 	$(CXX) $(INCL) $(ARCH) -g -c contour.cpp -o $@
