@@ -17,7 +17,7 @@
 GTEST_DIR = /Users/somchok/Downloads/gtest-1.4.0
 
 # Where to find user code.
-USER_DIR = ../gtest_samples
+USER_DIR = ..
 
 # Flags passed to the preprocessor.
 CPPFLAGS += -I$(GTEST_DIR) -I$(GTEST_DIR)/include
