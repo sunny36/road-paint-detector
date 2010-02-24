@@ -20,6 +20,22 @@ void Contour::findContours(IplImage* image){
    removeDuplicatesInContours(contours); 
    printContours(contours, number_of_contours, "contours_no_dup.txt");
 
+   std::vector< std::vector <CvPoint> > ground_plane_sequences;
+   CvSeq* c = contours;
+   int i,j ;
+   for(; c != NULL; c = (CvSeq*)(c->h_next)){
+     std::vector<CvPoint> sequence; 
+     for(i = 0; i < c->total; i++){
+       CvPoint* pt = CV_GET_SEQ_ELEM(CvPoint, c, i);        
+       sequence.push_back(*pt);
+     }
+     ground_plane_sequences.push_back(sequence);
+   }
+   /*for(i = 0; i < ground_plane_sequences.size(); i++){*/
+     /*for(j = 0; j < ground_plane_sequences[i].size(); j++){*/
+       /*std::cout << ground_plane_sequences[i][j].x << std::endl; */
+     /*}*/
+   /*}*/
 }
 
 IplImage* Contour::drawContours(){
