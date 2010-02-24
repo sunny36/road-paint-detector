@@ -11,11 +11,7 @@ int main(int argc, char** argv){
   cvSetMouseCallback("MIT Road Paint Detector", mouseCallbackFunc);
 
   /* camera matrix set up */
-  Camera camera;
-  camera.setK(FOCAL_LENGTH, 640, 480);
-  camera.setR(THETA);
-  camera.setT(X_WORLD, Y_WORLD, Z_WORLD);
-
+  Camera camera(FOCAL_LENGTH, 640, 480);
   CvMat *P = camera.getP();
   CvPoint2D32f point = camera.imageToGroundPlane(cvPoint(1,1));
   printf("x = %f, %f, \n", point.x, point.y);
