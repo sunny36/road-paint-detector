@@ -6,6 +6,8 @@
 #include "debug.h"
 #include <fstream>
 #include <string>
+#include <vector>
+#include <iostream> 
 
 class Contour{
 
