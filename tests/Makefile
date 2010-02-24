@@ -27,7 +27,7 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = convolution_unittest
+TESTS = convolution_unittest camera_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -37,7 +37,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 ############################## Custom Variables ##############################
 #OpenCV headers
 OPENCV_INCL = -I/usr/local/include/opencv
-
+OPENCV_LIBS = -L/usr/local/lib -lcxcore -lcv -lhighgui -lcvaux -lml 
 #Built OpenCV in 32bit mode
 ARCH = -arch i386
 ##############################################################################
@@ -85,4 +85,17 @@ convolution_unittest : convolution.o convolution_unittest.o gtest_main.a
 	$(CXX)  $(ARCH) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 ##############################################################################
 
+##############################################################################
+camera.o : $(USER_DIR)/camera.cpp $(USER_DIR)/camera.h \
+  							$(GTEST_HEADERS)
+	$(CXX) $(ARCH) $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/camera.cpp
+
+camera_unittest.o : $(USER_DIR)/camera_unittest.cpp \
+                      	 $(USER_DIR)/camera.h $(GTEST_HEADERS)
+	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
+	$(USER_DIR)/camera_unittest.cpp 
+
+camera_unittest : camera.o camera_unittest.o gtest_main.a
+	$(CXX)  $(ARCH) $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+##############################################################################
 
