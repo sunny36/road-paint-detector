@@ -56,6 +56,17 @@ int main(int argc, char** argv){
     out = (float*)calloc(sizeof(float), 640);
     if(width > 0){
       convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
+#if defined(DEBUG)
+			if(row == 374){
+				fp = fopen("convolution.txt", "wt");
+				fprintf(fp, "#\t X\t Y\n");
+				for(j = 0; j < img->width; j++){
+					fprintf(fp, "\t %d\t %f\n", j, out[j]);
+				}
+				fclose(fp);
+				plotGraph("convolution.txt");
+			}
+#endif
       normalization(out, 640, width);
       localMaximaSuppression(out, 640);
     }						
