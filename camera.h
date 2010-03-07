@@ -5,13 +5,13 @@
 #include "io.h"
 
 class Camera{
+  friend class CameraTest;
   public:
     Camera(float focal_lenght, int width, int height);
     CvMat* getK();
     CvMat* getRcw(); 
     CvMat* getTcw();
     CvMat* getP(); 
-		CvMat* getRTcw();
     float calculateY(int current_row);
     CvPoint2D32f imageToGroundPlane(CvPoint pt);
 
@@ -20,6 +20,7 @@ class Camera{
     CvMat *Rcw;
     CvMat *Tcw;
     CvMat *P;
+    CvMat* getRTcw();
     float degreesToRadians(float degrees);
     void setK(float focal_lenght, int width, int height);
     void setRcw(float theta);

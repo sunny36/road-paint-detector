@@ -88,7 +88,7 @@ CvMat* Camera::getTcw(){
 }
 
 CvMat* Camera::getP(){
-  CvMat *K, *R, *T; 
+  CvMat *K; 
   K = this->getK();
 	CvMat* RTcw = this->getRTcw();
 
