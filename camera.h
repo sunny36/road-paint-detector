@@ -6,23 +6,25 @@
 
 class Camera{
   public:
-    Camera();
-    void setK(float focal_lenght, int width, int height);
-    void setR(float theta);
-    void setT(float x, float y, float z);
+    Camera(float focal_lenght, int width, int height);
+    CvMat* getK();
+    CvMat* getRcw(); 
+    CvMat* getTcw();
     CvMat* getP(); 
+		CvMat* getRTcw();
     float calculateY(int current_row);
-    CvPoint2D32f imageToGroundPlane(CvPoint pt);
+    //CvPoint2D32f imageToGroundPlane(CvPoint pt);
 
   private:
     CvMat *K;
-    CvMat *R;
-    CvMat *T;
+    CvMat *Rcw;
+    CvMat *Tcw;
     CvMat *P;
-    CvMat* getK();
-    CvMat* getR(); 
-    CvMat* getT();
     float degreesToRadians(float degrees);
+    void setK(float focal_lenght, int width, int height);
+    void setRcw(float theta);
+    void setTcw(float x, float y, float z);
+
 };
 
 #endif
