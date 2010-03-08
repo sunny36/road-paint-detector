@@ -125,32 +125,3 @@ bool Convolution::isEven(int width){
 	return (width % 2 == 0) ? true : false; 
 }
 
-/* NOT BEING USED */
-void Convolution::copyBorder(int* in, int kernel_width){
-	int *temp = NULL;
-	int i; 
-	int new_row_width = (640 + 2*(kernel_width - 1));
-	temp = (int*)calloc(sizeof(int), new_row_width);
-	//left edge
-	for(i = 0; i < (kernel_width-1)/2; i++){
-		temp[i] = in[0];
-	}
-	//center
-	
-	for(i = 0; i < 640; i++){
-		temp[i + (kernel_width-1)/2] = in[i];
-	}
-	//right edge 
-	for(i = 0; i < (kernel_width-1)/2; i++){
-		temp[i + (640 + (kernel_width - 1)/2)] = in[639];
-	}
-
-	printf("kernel_width = %d\n", kernel_width);
-	in = (int*)realloc(in, sizeof(int) * (640 + (kernel_width -1)));
-	for(i = 0; i < (640 + (kernel_width - 1)); i++){
-		in[i] = temp[i]; 
-	}
-	
-	free(temp); 
-  return; 
-}
