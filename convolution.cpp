@@ -8,39 +8,35 @@ int Convolution::convolve1D(int* in, float* out, int dataSize,
   if(!in || !out || !kernel) return -1;
   if(dataSize <=0 || kernelSize <= 0) return -1;
   
-	int *temp_int = NULL;
-	int new_row_width = (640 + 2*(kernelSize - 1));
-	temp_int = (int*)calloc(sizeof(int), new_row_width);
+	int *in_with_borders = NULL;
+	int new_row_width = (640 + (kernelSize - 1));
+	in_with_borders = (int*)calloc(sizeof(int), new_row_width);
 	//left edge
 	for(i = 0; i < (kernelSize-1)/2; i++){
-		temp_int[i] = in[0];
+		in_with_borders[i] = in[0];
 	}
 	//center
 	for(i = 0; i < 640; i++){
-		temp_int[i + (kernelSize-1)/2] = in[i];
+		in_with_borders[i + (kernelSize-1)/2] = in[i];
 	}
 	//right edge 
 	for(i = 0; i < (kernelSize-1)/2; i++){
-		temp_int[i + (640 + (kernelSize - 1)/2)] = in[639];
+		in_with_borders[i + (640 + (kernelSize - 1)/2)] = in[639];
 	}
-	in = (int*)realloc(in, sizeof(int) * (640 + (kernelSize -1)));
-	for(i = 0; i < (640 + (kernelSize - 1)); i++){
-		in[i] = temp_int[i]; 
-	}	
 	out = (float*)realloc(out, sizeof(float) * (640 + (kernelSize -1)));
 	//start convolution from out[kernelSize-1] to out[dataSize-1] (last)
 	dataSize += kernelSize;
   for(i = kernelSize-1; i < (dataSize + (kernelSize-1)); ++i){
     out[i] = 0;                             // init to 0 before accumulate
     for(j = i, k = 0; k < kernelSize; --j, ++k){
-      out[i] += in[j] * kernel[k];
+      out[i] += in_with_borders[j] * kernel[k];
     }	            
   }
   //convolution from out[0] to out[kernelSize-2]
   for(i = 0; i < kernelSize - 1; ++i){
     out[i] = 0;                             // init to 0 before sum
     for(j = i, k = 0; j >= 0; --j, ++k){
-      out[i] += in[j] * kernel[k];
+      out[i] += in_with_borders[j] * kernel[k];
     }            
   }
 	

@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   int row, j, k, width;
   float *kernel;
   float *out;
-  int* in;
+  int in[640] = { 0 };
   CvScalar s;
   Convolution convolution;
   FILE *fp;
@@ -31,7 +31,6 @@ int main(int argc, char** argv){
       width = 0;
     }
     kernel = convolution.kernel1D(width);	    
-    in = (int*)calloc(sizeof(int), 640);
 #if defined(DEBUG)
     if(row == 374){
       fp = fopen("input.txt", "wt");
