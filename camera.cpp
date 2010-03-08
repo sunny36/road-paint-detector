@@ -159,7 +159,7 @@ CvPoint2D32f Camera::imageToGroundPlane(CvPoint pt){
 // 
 // 
   CvMat *H = cvCreateMat( 3, 3, CV_32FC1); 
-  //copy col 1 and 2 from K to H
+  //copy col 1 and 2 from P to H
   int row, col; 
   CvMat* P = getP();
   for(row = 0; row < P->rows ; row++){
@@ -167,7 +167,7 @@ CvPoint2D32f Camera::imageToGroundPlane(CvPoint pt){
       cvmSet(H, row, col, cvmGet(P, row, col));
     }
   }
-  //copy col 4 from K to H
+  //copy col 4 from P to H
   for(row = 0; row < P->rows; row++){
     cvmSet(H, row, 2, cvmGet(P, row, 3));
   }
@@ -197,5 +197,6 @@ CvPoint2D32f Camera::imageToGroundPlane(CvPoint pt){
   /*io.printMatrixFloat(ground_point, ground_point->rows, ground_point->cols);*/
   /*printf("\n");*/
  
-  return cvPoint2D32f(cvmGet(ground_point, 0, 0), cvmGet(ground_point, 1, 0));
+  return cvPoint2D32f(cvmGet(ground_point, 0, 0) / cvmGet(ground_point, 2, 0), 
+                      cvmGet(ground_point, 1, 0) / cvmGet(ground_point, 2, 0));
 }
