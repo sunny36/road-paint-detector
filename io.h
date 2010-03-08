@@ -2,6 +2,7 @@
 #define IO_H
 
 #include <cv.h>
+#include <cstdio> 
 
 class IO{
 	public:
