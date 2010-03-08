@@ -1,7 +1,7 @@
 CXX = g++
 INCL = -I/usr/local/include/opencv
 LIBS = -L/usr/local/lib -lcxcore -lcv -lhighgui -lcvaux -lml 
-ARCH = -arch i386
+ARCH = -m32
 
 all: main
 
@@ -24,6 +24,6 @@ io.o: io.cpp io.h
 	$(CXX) $(INCL) $(ARCH) -g -c io.cpp -o $@
 
 clean:
-	rm -f *~ *.o *.txt main
+	rm -rf *~ *.o *.txt main.dSYM main 
 
 .PHONY: clean 
