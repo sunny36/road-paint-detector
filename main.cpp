@@ -126,7 +126,7 @@ int main(int argc, char** argv){
   }
   //TODO Contours
   Contour contour;
-  contour.findContours(img);
+  contour.findContours(img, camera);
   img = contour.drawContours();
   cvShowImage("MIT Road Paint Detector", img);     
 
