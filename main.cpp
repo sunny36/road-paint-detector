@@ -19,7 +19,7 @@ int main(int argc, char** argv){
   float Y;
   int row, j, k, width;
   float *kernel;
-  float *out;
+  float out[640] = { 0 };
   int in[640] = { 0 };
   CvScalar s;
   Convolution convolution;
@@ -51,7 +51,6 @@ int main(int argc, char** argv){
       fclose(fp);
     }
 #endif
-    out = (float*)calloc(sizeof(float), 640);
     if(width > 0){
       convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
 #if defined(DEBUG)
