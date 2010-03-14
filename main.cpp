@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   int row, j, k, width;
   float *kernel;
   float *out;
-  int* in;
+  int in[640] = { 0 };
   CvScalar s;
   Convolution convolution;
   FILE *fp;
@@ -31,7 +31,6 @@ int main(int argc, char** argv){
       width = 0;
     }
     kernel = convolution.kernel1D(width);	    
-    in = (int*)calloc(sizeof(int), 640);
 #if defined(DEBUG)
     if(row == 374){
       fp = fopen("input.txt", "wt");
@@ -50,14 +49,65 @@ int main(int argc, char** argv){
 #if defined(DEBUG)
     if(row==374){
       fclose(fp);
-      plotGraph("input.txt");
     }
 #endif
     out = (float*)calloc(sizeof(float), 640);
     if(width > 0){
       convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
+#if defined(DEBUG)
+			if(row == 374){
+				//convolution result
+				fp = fopen("convolution.txt", "wt");
+				fprintf(fp, "#\t X\t Y\n");
+				for(j = 0; j < img->width; j++){
+					fprintf(fp, "\t %d\t %f\n", j, out[j]);
+				}
+				fclose(fp);
+				
+				//kernel result 
+				fprintf(stdout, "kernel size = %d", (width * 2 + 1));
+				fp = fopen("kernel.txt", "wt");
+				fprintf(fp, "#\t X\t Y\n");
+				int left = (640 - (width * 2 + 1))/2; 
+				int right = left + 1; 
+				for(j = 0; j < left; j++){
+					fprintf(fp, "\t %d\t %f\n", j, 0.0);
+				}
+				k = j;
+				for(j = 0; j < (width * 2 + 1); j++){
+					fprintf(fp, "\t %d\t %f\n", k++, 255*kernel[j]);
+				}
+				for(j = 0; j < right; j++){
+					fprintf(fp, "\t %d\t %f\n", k++, 0.0);
+				}
+				
+			}
+#endif
       normalization(out, 640, width);
+#if defined(DEBUG)
+			if(row == 374){
+				//convolution result
+				fp = fopen("normalization.txt", "wt");
+				fprintf(fp, "#\t X\t Y\n");
+				for(j = 0; j < img->width; j++){
+					fprintf(fp, "\t %d\t %f\n", j, out[j]);
+				}
+				fclose(fp);
+				
+			}
+#endif
       localMaximaSuppression(out, 640);
+#if defined(DEBUG)
+			if(row == 374){
+				//convolution result
+				fp = fopen("localmaxima.txt", "wt");
+				fprintf(fp, "#\t X\t Y\n");
+				for(j = 0; j < img->width; j++){
+					fprintf(fp, "\t %d\t %f\n", j, out[j]);
+				}
+				fclose(fp);
+			}
+#endif
     }						
     else{
       //set all pixels of non-convoled rows to zero
@@ -88,7 +138,7 @@ int main(int argc, char** argv){
 }
 
 int calculateWidthInPixels(CvMat* P, float Y){
-  float W = 0.2; //width of road 20cm ~ 0.2m 
+  float W = 0.10; //width of road 20cm ~ 0.2m 
   float w = 0.0; //width of the roads in pixels
 
   CvMat tmp;

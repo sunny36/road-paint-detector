@@ -12,7 +12,6 @@ class Convolution{
 										 int kernelSize);
 			float* kernel1D(int w);
   private:
-    void copyBorder(int* in, int kernel_width);
 		bool isEven(int width);
 };
 
