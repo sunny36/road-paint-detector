@@ -8,12 +8,13 @@
 #include <string>
 #include <vector>
 #include <iostream> 
+#include "camera.h"
 
 class Contour{
 
   public:
     Contour();
-    void findContours(IplImage* image);
+    void findContours(IplImage* image, Camera camera);
     IplImage* drawContours();
     int getNumberOfContors();
 
@@ -25,6 +26,9 @@ class Contour{
     void printContours(CvSeq* contours, 
                        int number_of_contours,
                        std::string filename);
+    void printContours(std::vector< std::vector<CvPoint2D32f> > contours, 
+                       const std::string filename);
+
     void removeUnwantedContour();
     void removeDuplicatesInContours(CvSeq* contours);
 };
