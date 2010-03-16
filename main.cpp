@@ -65,6 +65,7 @@ int main(int argc, char** argv){
       }
 #endif
       normalization(out, img->width, width);
+      localMaximaSuppression(out, img->width);
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
@@ -141,7 +142,7 @@ float calculateY(CvMat* P, int current_row){
   return Y;
 }
 
-void localMaximaSuppression(float image_row[], int row_size){
+void localMaximaSuppression(std::vector<float>& image_row, int row_size){
   int i; 
   float* image_row_suppressed;
   image_row_suppressed = (float*)calloc(sizeof(float), row_size);
