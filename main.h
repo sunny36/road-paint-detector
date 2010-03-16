@@ -23,7 +23,7 @@ float FOCAL_LENGTH = 1563.0;
 int calculateWidthInPixels(CvMat* P, float Y);
 float calculateY(CvMat* P, int current_row);
 void localMaximaSuppression(float image_row[], int row_size);
-void normalization(float out[], int n, int lane_width);
+void normalization(std::vector<float>& out, int n, int lane_width);
 void plotGraph(const char* filename);
 
 #endif

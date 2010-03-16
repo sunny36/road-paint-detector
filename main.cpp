@@ -64,6 +64,7 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
+      normalization(out, img->width, width);
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
@@ -192,7 +193,7 @@ void localMaximaSuppression(float image_row[], int row_size){
   return; 
 }
 
-void normalization(float out[], int n, int lane_width){
+void normalization(std::vector<float>& out, int n, int lane_width){
   float max = 0.0;
   int i; 
   for(i = 0; i < n; i++){
