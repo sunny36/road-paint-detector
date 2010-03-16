@@ -1,126 +1,90 @@
 #include "convolution.h"
 
-int Convolution::convolve1D(int* in, float* out, int dataSize, 
-                            float* kernel, int kernelSize){
+void Convolution::convolve1D(std::vector<int> in, std::vector<float> kernel,
+                             std::vector<float>& out){
+  std::cout << kernel.size() << std::endl;
   int i, j, k;
-	float *temp_float; 
-  // check validity of params
-  if(!in || !out || !kernel) return -1;
-  if(dataSize <=0 || kernelSize <= 0) return -1;
-  
-	int *in_with_borders = NULL;
-  float *out_with_borders = NULL;
-	int new_row_width = (640 + (kernelSize - 1));
-	in_with_borders = (int*)calloc(sizeof(int), new_row_width);
-  out_with_borders = (float*)calloc(sizeof(float), new_row_width);
+  int new_row_width = (640 + (kernel.size() - 1));
+  std::cout << std::endl;
+  std::vector<int> in_with_borders(new_row_width);
 
-	//left edge
-	for(i = 0; i < (kernelSize-1)/2; i++){
-		in_with_borders[i] = in[0];
-	}
-	//center
-	for(i = 0; i < 640; i++){
-		in_with_borders[i + (kernelSize-1)/2] = in[i];
-	}
-	//right edge 
-	for(i = 0; i < (kernelSize-1)/2; i++){
-		in_with_borders[i + (640 + (kernelSize - 1)/2)] = in[639];
-	}
+  for (i = 0; i < ((kernel.size() - 1) / 2); i++){
+    in_with_borders[i] = in[0];
+  }
+  for (i = 0; i < 640; i++) {
+   in_with_borders[i + ((kernel.size() - 1) / 2)] = in[i];
+  }
+  for(i = 0; i < (kernel.size() - 1)/2; i++){
+   in_with_borders[i + (640 + (kernel.size() - 1) / 2)] = in[639];
+  }
+   std::vector<float> out_with_borders(new_row_width);
 
-	//start convolution from out[kernelSize-1] to out[dataSize-1] (last)
-	dataSize += kernelSize;
-  for(i = kernelSize-1; i < (dataSize + (kernelSize-1)); ++i){
-    out_with_borders[i] = 0;                             // init to 0 before accumulate
-    for(j = i, k = 0; k < kernelSize; --j, ++k){
-      out_with_borders[i] += in_with_borders[j] * kernel[k];
-    }	            
+  std::cout << in.size() << ", " << kernel.size() << std::endl;
+  for(i = kernel.size() - 1; i < (in.size() + kernel.size() +  - 1); ++i){
+  out_with_borders[i] = 0; // init to 0 before accumulate
+  for(j = i, k = 0; k < kernel.size(); --j, ++k){
+    out_with_borders[i] += in_with_borders[j] * kernel[k];
+  }	            
   }
-  //convolution from out[0] to out[kernelSize-2]
-  for(i = 0; i < kernelSize - 1; ++i){
-    out_with_borders[i] = 0;                             // init to 0 before sum
-    for(j = i, k = 0; j >= 0; --j, ++k){
-      out_with_borders[i] += in_with_borders[j] * kernel[k];
-    }            
+
+  for(i = 0; i < kernel.size() - 1; ++i){
+  out_with_borders[i] = 0;  // init to 0 before sum
+  for(j = i, k = 0; j >= 0; --j, ++k){
+    out_with_borders[i] += in_with_borders[j] * kernel[k];
+  }            
   }
-	
-	temp_float = (float*)calloc(sizeof(float), 640);
-	for(i = 0; i < 640; i++){
-		temp_float[i] = out_with_borders[i + ((kernelSize - 1))];
-	}
-	for(i = 0; i < 640; i++){
-		out[i] = temp_float[i];
-	}
-  return 0;
+ for (i = 0; i < out_with_borders.size(); i++) {
+    std::cout << out_with_borders[i] << " "; 
+  }
+
+
+  out.resize(640);
+  for(i = 0; i < 640; i++){
+  out[i] = out_with_borders[i + ((kernel.size() - 1))];
+
+  }
+
+  return;
 }
+  
+void Convolution::kernel1D(int width, std::vector<float>& kernel){
+  int kernel_size = width * 2 + 1;
+  kernel.resize(kernel_size, 1);
+  int i, j;
+  int left_edge, right_edge;
 
-
-float* Convolution::kernel1D(int width){
-  float* kernel;
-  int left_of_plus_one, right_of_plus_one, left_edge, right_edge;
-  int j,k;
-	//kernel[0] -> kernel[w*2]
-	kernel = (float *)calloc(sizeof(float), width * 2 + 1); 
-  //check if lane width is odd or even 
   if(isEven(width)){
-    //width is even
-    kernel[width] = 1;
-    left_of_plus_one = right_of_plus_one = ((width / 2) - 1);
-    k = width; 
-    k = k + 1;
-    for(j=0; j< right_of_plus_one; j++){
-      kernel[k] = 1;
-      k = k +1;
+    left_edge = right_edge = ((width / 2) - 1); 
+    for (i = 0; i < left_edge; i++) {
+      kernel[i] = -1;
     }
-    k = width;
-    k = k -1;
-    for(j=0; j< left_of_plus_one; j++){
-      kernel[k] = 1;
-      k = k -1;
-    }
-    int left_edge = ((width / 2) - 1); 
-    int right_edge = ((width / 2) - 1); 
-    for(j=0; j< left_edge; j++){
+    kernel[i] = -0.5;
+    i++;
+    kernel[i] = 0; 
+    j = kernel_size - 1; //last element of the kernel 
+    for (i = 0; i < right_edge; i++) {
       kernel[j] = -1;
+      j = j -1;
     }
-    kernel[j] = -0.5; j++; kernel[j]=0; 
-    k = width * 2 + 1;
-    k = k-1;
-    for(j=0; j < right_edge; j++){
-      kernel[k] = -1; 
-      k = k -1;
-    }
-    kernel[k] = -0.5; k--; kernel[k] = 0;
+    kernel[j] = -0.5;
+    j--;
+    kernel[j] = 0;
   }
-  else{
-    //width is odd
-    kernel[width] = 1;
-    left_of_plus_one = right_of_plus_one = floor(width / 2);
-    k = width; 
-    k = k + 1;
-    for(j=0; j< right_of_plus_one; j++){
-      kernel[k] = 1;
-      k = k +1;
+  else{ // kernel is odd
+    int left_edge = right_edge = floor(width / 2);
+    for (i = 0; i < left_edge; i++) {
+      kernel[i] = -1;
     }
-    k = width;
-    k = k -1;
-    for(j=0; j< right_of_plus_one; j++){
-      kernel[k] = 1;
-      k = k -1;
-    }
-    left_edge = right_edge = floor(width / 2);
-    for(j=0; j< left_edge; j++){
+    kernel[i] = -0.5; 
+    j = kernel_size - 1; //last element of the kernel
+    for (i = 0; i < right_edge; i++) {
       kernel[j] = -1;
+      j = j -1;
     }
-    kernel[j]= -0.5; 
-    k = width * 2 + 1;
-    k = k -1;
-    for(j=0; j < right_edge; j++){
-      kernel[k] = -1; 
-      k = k -1;
-    }
-    kernel[k] = -0.5;
+    kernel[j] = -0.5;
   }
-  return kernel;
+
+  return;
 }
 
 bool Convolution::isEven(int width){

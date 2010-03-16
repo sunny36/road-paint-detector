@@ -6,6 +6,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <iostream>
 #include "io.h"
 #include "camera.h"
 #include "convolution.h"

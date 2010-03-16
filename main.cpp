@@ -17,117 +17,60 @@ int main(int argc, char** argv){
   printf("x = %f, %f, \n", point.x, point.y);
 
   float Y;
-  int row, j, k, width;
-  float *kernel;
-  float out[640] = { 0 };
-  int in[640] = { 0 };
-  CvScalar s;
+  int row, col, j, k, width;
+  std::vector<float> kernel;
+  std::vector<float> out(640);
+  std::vector<int> in(640);
   Convolution convolution;
   FILE *fp;
-  for(row = 0; row < img->height; row++){
+  for (row = 0; row < img->height; row++) {
     Y = calculateY(P, row);
     width = calculateWidthInPixels(P, Y);
-    if(width < ONE_PIXEL){
+    if (width < ONE_PIXEL) {
       width = 0;
     }
-    kernel = convolution.kernel1D(width);	    
+    //find the kernel only if only there is a width
+    if (width > 0) {
+      convolution.kernel1D(width, kernel);
+    }
 #if defined(DEBUG)
-    if(row == 374){
+    if (row == 374) {
       fp = fopen("input.txt", "wt");
       fprintf(fp, "#\t X\t Y\n");
     }
 #endif
-    for(j=0; j < img->width; j++){
-      s = cvGet2D(img, row, j);
-      in[j] = s.val[0];
+    for (col = 0; col < img->width; col++) {
+      CvScalar scalar = cvGet2D(img, row, col);
+      in[col] = scalar.val[0];
 #if defined(DEBUG)
-      if(row == 374){
-        fprintf(fp, "\t %d\t %d\n", j, in[j]);
-      }				
+      if (row == 374) {
+        fprintf(fp, "\t %d\t %d\t\n", col, in[col]);
+      }
 #endif
     }
 #if defined(DEBUG)
-    if(row==374){
+    if (row == 374) {
       fclose(fp);
     }
 #endif
-    if(width > 0){
-      convolution.convolve1D(in, out, 640, kernel, width * 2 + 1);
+    if (width > 0) {
+      convolution.convolve1D(in, kernel, out);
 #if defined(DEBUG)
-			if(row == 374){
-				//convolution result
-				fp = fopen("convolution.txt", "wt");
-				fprintf(fp, "#\t X\t Y\n");
-				for(j = 0; j < img->width; j++){
-					fprintf(fp, "\t %d\t %f\n", j, out[j]);
-				}
-				fclose(fp);
-				
-				//kernel result 
-				fprintf(stdout, "kernel size = %d", (width * 2 + 1));
-				fp = fopen("kernel.txt", "wt");
-				fprintf(fp, "#\t X\t Y\n");
-				int left = (640 - (width * 2 + 1))/2; 
-				int right = left + 1; 
-				for(j = 0; j < left; j++){
-					fprintf(fp, "\t %d\t %f\n", j, 0.0);
-				}
-				k = j;
-				for(j = 0; j < (width * 2 + 1); j++){
-					fprintf(fp, "\t %d\t %f\n", k++, 255*kernel[j]);
-				}
-				for(j = 0; j < right; j++){
-					fprintf(fp, "\t %d\t %f\n", k++, 0.0);
-				}
-				
-			}
-#endif
-      normalization(out, 640, width);
-#if defined(DEBUG)
-			if(row == 374){
-				//convolution result
-				fp = fopen("normalization.txt", "wt");
-				fprintf(fp, "#\t X\t Y\n");
-				for(j = 0; j < img->width; j++){
-					fprintf(fp, "\t %d\t %f\n", j, out[j]);
-				}
-				fclose(fp);
-				
-			}
-#endif
-      localMaximaSuppression(out, 640);
-#if defined(DEBUG)
-			if(row == 374){
-				//convolution result
-				fp = fopen("localmaxima.txt", "wt");
-				fprintf(fp, "#\t X\t Y\n");
-				for(j = 0; j < img->width; j++){
-					fprintf(fp, "\t %d\t %f\n", j, out[j]);
-				}
-				fclose(fp);
-			}
-#endif
-    }						
-    else{
-      //set all pixels of non-convoled rows to zero
-      for(j=0; j < img->width; j++){
-        out[j] = 0; 
+      if (row == 374) {
+        fp = fopen("convolution.txt", "wt"); 
+        for (col = 0; col < img->width; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, out[col]);
+        }
+        fclose(fp);
       }
+#endif
     }
-    for(j=0; j< img->width; j++){
-      s.val[0] = out[j];
-#if defined(DEBUG)
-      if(row == 374){
-        printf("\t %d\t %f\n", j, out[j]);
-      }
-#endif		
-      cvSet2D(img, row, j, s);			
+    for (col = 0; col < img->width; col++) {
+      CvScalar scalar;
+      scalar.val[0] = out[col];
+      cvSet2D(img, row, col, scalar);
     }
-  }
-  //TODO Contours
-  Contour contour;
-  contour.findContours(img, camera);
-  img = contour.drawContours();
+  } // for each row
   cvShowImage("MIT Road Paint Detector", img);     
 
   cvWaitKey(0);
