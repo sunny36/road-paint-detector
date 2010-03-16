@@ -29,10 +29,6 @@ int main(int argc, char** argv){
     if (width < ONE_PIXEL) {
       width = 0;
     }
-    //find the kernel only if only there is a width
-    if (width > 0) {
-      convolution.kernel1D(width, kernel);
-    }
 #if defined(DEBUG)
     if (row == 374) {
       fp = fopen("input.txt", "wt");
@@ -53,7 +49,9 @@ int main(int argc, char** argv){
       fclose(fp);
     }
 #endif
+    //find the kernel only if only there is a width
     if (width > 0) {
+      convolution.kernel1D(width, kernel);
       convolution.convolve1D(in, kernel, out);
 #if defined(DEBUG)
       if (row == 374) {
