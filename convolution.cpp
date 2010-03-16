@@ -28,7 +28,7 @@ int Convolution::convolve1D(int* in, float* out, int dataSize,
 	}
 
 	//start convolution from out[kernelSize-1] to out[dataSize-1] (last)
-	dataSize += kernelSize;
+
   for(i = kernelSize-1; i < (dataSize + (kernelSize-1)); ++i){
     out_with_borders[i] = 0;                             // init to 0 before accumulate
     for(j = i, k = 0; k < kernelSize; --j, ++k){
