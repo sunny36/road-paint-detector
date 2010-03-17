@@ -14,7 +14,7 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = /Users/somchok/Downloads/gtest-1.4.0
+GTEST_DIR = /home/somchok/src/gtest-1.4.0
 
 # Where to find user code.
 USER_DIR = ..
@@ -39,7 +39,7 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 OPENCV_INCL = -I/usr/local/include/opencv
 OPENCV_LIBS = -L/usr/local/lib -lcxcore -lcv -lhighgui -lcvaux -lml 
 #Built OpenCV in 32bit mode
-ARCH = -arch i386
+ARCH = -m32
 ##############################################################################
 
 # House-keeping build targets.
@@ -76,10 +76,10 @@ convolution.o : $(USER_DIR)/convolution.cpp $(USER_DIR)/convolution.h \
   							$(GTEST_HEADERS)
 	$(CXX) $(ARCH) $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/convolution.cpp
 
-convolution_unittest.o : $(USER_DIR)/convolution_unittest.cpp \
+convolution_unittest.o : convolution_unittest.cpp \
                       	 $(USER_DIR)/convolution.h $(GTEST_HEADERS)
 	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
-	$(USER_DIR)/convolution_unittest.cpp 
+	convolution_unittest.cpp 
 
 convolution_unittest : convolution.o convolution_unittest.o gtest_main.a
 	$(CXX)  $(ARCH) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
@@ -90,10 +90,10 @@ camera.o : $(USER_DIR)/camera.cpp $(USER_DIR)/camera.h \
   							$(GTEST_HEADERS)
 	$(CXX) $(ARCH) $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/camera.cpp
 
-camera_unittest.o : $(USER_DIR)/camera_unittest.cpp \
+camera_unittest.o : camera_unittest.cpp \
                       	 $(USER_DIR)/camera.h $(GTEST_HEADERS)
 	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
-	$(USER_DIR)/camera_unittest.cpp 
+	camera_unittest.cpp 
 
 camera_unittest : camera.o camera_unittest.o gtest_main.a
 	$(CXX)  $(ARCH) $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
