@@ -31,6 +31,9 @@ class Contour{
 
     void removeUnwantedContour();
     void removeDuplicatesInContours(CvSeq* contours);
+    void scaleGroundPlaneSequences(
+        std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences);
+
 };
 
 #endif

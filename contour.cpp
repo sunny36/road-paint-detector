@@ -33,7 +33,22 @@ void Contour::findContours(IplImage* image, Camera camera){
      ground_plane_sequences.push_back(sequence);
    }
    printContours(ground_plane_sequences, "contours_ground_plane.txt"); 
+  
+   scaleGroundPlaneSequences(ground_plane_sequences);
 
+   printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
+
+}
+
+void Contour::scaleGroundPlaneSequences(
+            std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
+   int i, j; 
+  for (i = 0; i < ground_plane_sequences.size(); i++) {
+    for (j = 0; j < ground_plane_sequences[i].size(); j++) {
+      ground_plane_sequences[i][j].x = 320 + ground_plane_sequences[i][j].x * 10;
+      ground_plane_sequences[i][j].y = 479 - ground_plane_sequences[i][j].y * 10;
+    }
+  }
 }
 
 IplImage* Contour::drawContours(){
