@@ -55,15 +55,40 @@ int main(int argc, char** argv){
       convolution.convolve1D(in, kernel, out);
 #if defined(DEBUG)
       if (row == 374) {
+        //convolution result
         fp = fopen("convolution.txt", "wt"); 
+        fprintf(fp, "#\t X\t Y\n");
         for (col = 0; col < img->width; col++) {
           fprintf(fp, "\t %d\t %f\n", col, out[col]);
         }
+        fclose(fp);
+
+        //kernel result
+        fp = fopen("kernel.txt", "wt"); 
+        fprintf(fp, "#\t X\t Y\n");
+        int left = in.size() - kernel.size() / 2;
+        int right = left + 1;
+        for (col = 0; col < left; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, 0.0);
+        }
+        k = col;
+        for (col = 0; col < kernel.size(); col++) {
+          fprintf(fp, "\t %d\t %f\n", k++, kernel[i] * 255);
+        }
+        for (col = 0; col < right; col++) {
+          fprintf(fp, "\t %d\t %f\n", k++, 0.0);
+        } 
         fclose(fp);
       }
 #endif
       normalization(out, img->width, width);
       localMaximaSuppression(out, img->width);
+    }
+    else {
+      out.resize(img->width); 
+      for (col = 0; col < img->width; col++) {
+        out[col] = 0;
+      }
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
