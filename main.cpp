@@ -95,7 +95,11 @@ int main(int argc, char** argv){
       scalar.val[0] = out[col];
       cvSet2D(img, row, col, scalar);
     }
-  } // for each row
+  } // end for loop
+
+  Contour contour;
+  contour.findContours(img, camera);
+  img = contour.drawContours();
   cvShowImage("MIT Road Paint Detector", img);     
 
   cvWaitKey(0);
