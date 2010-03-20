@@ -36,10 +36,30 @@ void Contour::findContours(IplImage* image, Camera camera){
   
    scaleGroundPlaneSequences(ground_plane_sequences);
 
+   drawLines(ground_plane_sequences);
+   IplImage *img1 = cvCreateImage(cvSize(640, 480), 8, 1); 
+   cvNamedWindow("ground_points", CV_WINDOW_AUTOSIZE); 
+  for (i = 0; i < ground_plane_sequences.size(); i++) {
+    for (j = 0; j < ground_plane_sequences[i].size(); j++) {
+      CvScalar s; 
+      s.val[0] = 255;
+      if(ground_plane_sequences[i][j].x >= 0 && 
+         ground_plane_sequences[i][j].x < 640 &&
+         ground_plane_sequences[i][j].y >= 0 &&
+         ground_plane_sequences[i][j].y < 480) {
+      cvSet2D(img1, 
+              cvRound(ground_plane_sequences[i][j].x), 
+              cvRound(ground_plane_sequences[i][j].y), 
+              s); 
+
+      }
+    }
+  }
+
    printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
 
-   drawLines(ground_plane_sequences);
 
+   cvShowImage("ground_points", img1);
 }
 
 void Contour::scaleGroundPlaneSequences(std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
@@ -60,7 +80,7 @@ void Contour::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_s
   int i, j;
   float line[4];
   CvPoint pt1, pt2; 
-
+  float t;
   for(i = 0; i < ground_plane_sequences.size(); i++){
 
     CvPoint* points = (CvPoint*)malloc(ground_plane_sequences[i].size() * sizeof(points[0]));
@@ -70,14 +90,12 @@ void Contour::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_s
       points[j].x = cvRound(ground_plane_sequences[i][j].x); 
       points[j].y = cvRound(ground_plane_sequences[i][j].y); 
     }
-    cvFitLine(&pointMat, CV_DIST_L2, 1, 0.001, 0.001, line); 
-    std::ofstream out("lines.txt"); 
-      out << "(" << line[0] << "," << line[1] << "," 
-                 << line[2] << "," << line[3] << "," << ")" << std::endl;
-    pt1.x = cvRound(line[0]); 
-    pt1.y = cvRound(line[1]); 
-    pt2.x = cvRound(line[2]); 
-    pt2.y = cvRound(line[3]); 
+    cvFitLine(&pointMat, CV_DIST_L1, 1, 0.001, 0.001, line); 
+     fprintf(stdout, "%f %f %f %f\n", line[0], line[1], line[2], line[3]);
+     pt1.x = cvRound(line[0]); 
+     pt1.y = cvRound(line[1]); 
+     pt2.x = cvRound(line[2]); 
+     pt2.y = cvRound(line[3]); 
     cvLine(img, pt1, pt2, CV_RGB(0, 255, 0), 1, CV_AA, 0); 
     free(points); 
   }
