@@ -28,9 +28,11 @@ class Contour{
                        std::string filename);
     void printContours(std::vector< std::vector<CvPoint2D32f> > contours, 
                        const std::string filename);
-
     void removeUnwantedContour();
     void removeDuplicatesInContours(CvSeq* contours);
+    void scaleGroundPlaneSequences(std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences);
+    void drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences);
+
 };
 
 #endif

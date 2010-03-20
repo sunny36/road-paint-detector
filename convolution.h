@@ -2,15 +2,17 @@
 #define CONVOLUTION_H
 
 #include <stdlib.h>
-#include <math.h>
 #include <highgui.h>
 #include <cv.h>
+#include <vector>
+#include <cmath>
+#include <iostream> 
 
 class Convolution{
   public:
-      int convolve1D(int* in, float* out, int dataSize, float* kernel, 
-										 int kernelSize);
-			float* kernel1D(int w);
+      void convolve1D(std::vector<int> in, std::vector<float> kernel,
+                      std::vector<float>& out);
+      void kernel1D(int width, std::vector<float>& kernel);
   private:
 		bool isEven(int width);
 };
