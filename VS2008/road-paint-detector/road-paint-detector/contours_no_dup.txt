@@ -1,0 +1,744 @@
+Number of contours = 0
+Contour #0
+1 elements:
+(307,476)
+Contour #1
+5 elements:
+(304,475)
+(304,476)
+(304,477)
+(303,478)
+(305,476)
+Contour #2
+1 elements:
+(555,474)
+Contour #3
+1 elements:
+(562,473)
+Contour #4
+1 elements:
+(559,473)
+Contour #5
+1 elements:
+(517,472)
+Contour #6
+1 elements:
+(299,472)
+Contour #7
+1 elements:
+(231,472)
+Contour #8
+1 elements:
+(229,472)
+Contour #9
+1 elements:
+(190,472)
+Contour #10
+1 elements:
+(509,471)
+Contour #11
+1 elements:
+(226,466)
+Contour #12
+1 elements:
+(52,466)
+Contour #13
+1 elements:
+(560,465)
+Contour #14
+1 elements:
+(74,464)
+Contour #15
+1 elements:
+(576,463)
+Contour #16
+1 elements:
+(343,461)
+Contour #17
+2 elements:
+(340,461)
+(340,462)
+Contour #18
+1 elements:
+(296,461)
+Contour #19
+2 elements:
+(228,461)
+(229,462)
+Contour #20
+1 elements:
+(570,460)
+Contour #21
+1 elements:
+(565,460)
+Contour #22
+1 elements:
+(628,459)
+Contour #23
+1 elements:
+(172,459)
+Contour #24
+1 elements:
+(50,459)
+Contour #25
+1 elements:
+(54,458)
+Contour #26
+1 elements:
+(560,457)
+Contour #27
+1 elements:
+(627,456)
+Contour #28
+1 elements:
+(529,456)
+Contour #29
+1 elements:
+(108,456)
+Contour #30
+1 elements:
+(106,456)
+Contour #31
+1 elements:
+(591,455)
+Contour #32
+1 elements:
+(559,455)
+Contour #33
+1 elements:
+(628,454)
+Contour #34
+1 elements:
+(448,454)
+Contour #35
+1 elements:
+(444,453)
+Contour #36
+1 elements:
+(587,451)
+Contour #37
+1 elements:
+(584,451)
+Contour #38
+1 elements:
+(550,450)
+Contour #39
+1 elements:
+(548,449)
+Contour #40
+1 elements:
+(544,448)
+Contour #41
+1 elements:
+(605,447)
+Contour #42
+1 elements:
+(549,447)
+Contour #43
+1 elements:
+(546,447)
+Contour #44
+3 elements:
+(541,444)
+(542,445)
+(541,446)
+Contour #45
+1 elements:
+(499,443)
+Contour #46
+1 elements:
+(575,442)
+Contour #47
+1 elements:
+(162,442)
+Contour #48
+2 elements:
+(537,441)
+(536,442)
+Contour #49
+1 elements:
+(566,440)
+Contour #50
+1 elements:
+(564,439)
+Contour #51
+2 elements:
+(532,438)
+(532,439)
+Contour #52
+2 elements:
+(527,437)
+(528,438)
+Contour #53
+1 elements:
+(628,435)
+Contour #54
+2 elements:
+(556,435)
+(556,436)
+Contour #55
+1 elements:
+(513,434)
+Contour #56
+1 elements:
+(520,432)
+Contour #57
+5 elements:
+(517,430)
+(517,431)
+(516,432)
+(517,433)
+(517,432)
+Contour #58
+2 elements:
+(513,428)
+(514,429)
+Contour #59
+1 elements:
+(509,428)
+Contour #60
+1 elements:
+(540,427)
+Contour #61
+1 elements:
+(507,427)
+Contour #62
+1 elements:
+(557,425)
+Contour #63
+1 elements:
+(542,425)
+Contour #64
+2 elements:
+(509,425)
+(510,426)
+Contour #65
+1 elements:
+(403,425)
+Contour #66
+1 elements:
+(196,425)
+Contour #67
+1 elements:
+(507,424)
+Contour #68
+1 elements:
+(72,424)
+Contour #69
+1 elements:
+(74,423)
+Contour #70
+2 elements:
+(104,422)
+(104,423)
+Contour #71
+1 elements:
+(100,422)
+Contour #72
+2 elements:
+(499,421)
+(500,422)
+Contour #73
+3 elements:
+(534,419)
+(533,420)
+(533,421)
+Contour #74
+3 elements:
+(495,418)
+(494,419)
+(496,419)
+Contour #75
+2 elements:
+(490,416)
+(491,417)
+Contour #76
+1 elements:
+(535,415)
+Contour #77
+1 elements:
+(489,414)
+Contour #78
+1 elements:
+(486,413)
+Contour #79
+2 elements:
+(483,411)
+(484,412)
+Contour #80
+2 elements:
+(512,410)
+(512,411)
+Contour #81
+1 elements:
+(404,409)
+Contour #82
+1 elements:
+(585,408)
+Contour #83
+1 elements:
+(502,405)
+Contour #84
+4 elements:
+(470,404)
+(471,405)
+(472,406)
+(473,407)
+Contour #85
+1 elements:
+(497,403)
+Contour #86
+1 elements:
+(468,403)
+Contour #87
+1 elements:
+(491,400)
+Contour #88
+4 elements:
+(465,399)
+(464,400)
+(463,401)
+(463,402)
+Contour #89
+1 elements:
+(490,398)
+Contour #90
+1 elements:
+(484,396)
+Contour #91
+3 elements:
+(458,396)
+(459,397)
+(460,398)
+Contour #92
+2 elements:
+(456,393)
+(457,394)
+Contour #93
+2 elements:
+(452,393)
+(453,393)
+Contour #94
+1 elements:
+(626,391)
+Contour #95
+2 elements:
+(476,391)
+(477,392)
+Contour #96
+2 elements:
+(474,390)
+(474,391)
+Contour #97
+1 elements:
+(446,389)
+Contour #98
+1 elements:
+(469,388)
+Contour #99
+1 elements:
+(444,388)
+Contour #100
+2 elements:
+(441,386)
+(442,387)
+Contour #101
+2 elements:
+(437,384)
+(438,385)
+Contour #102
+1 elements:
+(540,383)
+Contour #103
+1 elements:
+(459,383)
+Contour #104
+1 elements:
+(435,383)
+Contour #105
+1 elements:
+(56,383)
+Contour #106
+1 elements:
+(58,382)
+Contour #107
+3 elements:
+(62,379)
+(61,380)
+(60,381)
+Contour #108
+11 elements:
+(74,368)
+(73,369)
+(72,370)
+(71,371)
+(70,372)
+(69,373)
+(68,374)
+(67,375)
+(66,376)
+(65,377)
+(64,378)
+Contour #109
+2 elements:
+(77,366)
+(76,367)
+Contour #110
+1 elements:
+(79,365)
+Contour #111
+1 elements:
+(399,364)
+Contour #112
+1 elements:
+(424,363)
+Contour #113
+2 elements:
+(429,362)
+(429,363)
+Contour #114
+1 elements:
+(427,360)
+Contour #115
+1 elements:
+(425,359)
+Contour #116
+1 elements:
+(423,358)
+Contour #117
+1 elements:
+(420,357)
+Contour #118
+1 elements:
+(418,356)
+Contour #119
+1 elements:
+(416,355)
+Contour #120
+1 elements:
+(414,354)
+Contour #121
+1 elements:
+(412,353)
+Contour #122
+1 elements:
+(409,352)
+Contour #123
+2 elements:
+(406,350)
+(407,351)
+Contour #124
+1 elements:
+(464,349)
+Contour #125
+2 elements:
+(460,347)
+(460,348)
+Contour #126
+1 elements:
+(445,346)
+Contour #127
+1 elements:
+(451,345)
+Contour #128
+1 elements:
+(527,344)
+Contour #129
+1 elements:
+(541,343)
+Contour #130
+1 elements:
+(558,342)
+Contour #131
+1 elements:
+(543,341)
+Contour #132
+1 elements:
+(574,340)
+Contour #133
+1 elements:
+(585,339)
+Contour #134
+1 elements:
+(587,338)
+Contour #135
+2 elements:
+(629,336)
+(628,337)
+Contour #136
+1 elements:
+(627,335)
+Contour #137
+1 elements:
+(601,335)
+Contour #138
+1 elements:
+(608,334)
+Contour #139
+2 elements:
+(113,332)
+(112,333)
+Contour #140
+6 elements:
+(120,326)
+(119,327)
+(118,328)
+(117,329)
+(116,330)
+(115,331)
+Contour #141
+1 elements:
+(616,325)
+Contour #142
+1 elements:
+(343,324)
+Contour #143
+1 elements:
+(337,324)
+Contour #144
+2 elements:
+(107,324)
+(106,325)
+Contour #145
+3 elements:
+(341,321)
+(342,322)
+(341,323)
+Contour #146
+1 elements:
+(338,320)
+Contour #147
+1 elements:
+(336,319)
+Contour #148
+1 elements:
+(334,318)
+Contour #149
+1 elements:
+(332,317)
+Contour #150
+1 elements:
+(618,316)
+Contour #151
+1 elements:
+(611,315)
+Contour #152
+1 elements:
+(605,314)
+Contour #153
+1 elements:
+(599,313)
+Contour #154
+5 elements:
+(140,308)
+(140,309)
+(139,310)
+(138,311)
+(137,312)
+Contour #155
+1 elements:
+(4,307)
+Contour #156
+1 elements:
+(8,306)
+Contour #157
+1 elements:
+(11,305)
+Contour #158
+1 elements:
+(301,304)
+Contour #159
+2 elements:
+(298,302)
+(299,303)
+Contour #160
+1 elements:
+(26,301)
+Contour #161
+1 elements:
+(29,300)
+Contour #162
+1 elements:
+(33,299)
+Contour #163
+2 elements:
+(151,297)
+(150,298)
+Contour #164
+1 elements:
+(42,296)
+Contour #165
+1 elements:
+(47,295)
+Contour #166
+1 elements:
+(51,294)
+Contour #167
+3 elements:
+(277,291)
+(278,292)
+(279,293)
+Contour #168
+2 elements:
+(160,289)
+(159,290)
+Contour #169
+1 elements:
+(73,288)
+Contour #170
+1 elements:
+(77,287)
+Contour #171
+1 elements:
+(81,286)
+Contour #172
+1 elements:
+(264,285)
+Contour #173
+1 elements:
+(165,284)
+Contour #174
+1 elements:
+(92,283)
+Contour #175
+1 elements:
+(96,282)
+Contour #176
+1 elements:
+(254,281)
+Contour #177
+1 elements:
+(306,278)
+Contour #178
+3 elements:
+(280,277)
+(280,278)
+(280,279)
+Contour #179
+3 elements:
+(323,276)
+(323,277)
+(323,278)
+Contour #180
+3 elements:
+(305,274)
+(306,275)
+(305,276)
+Contour #181
+1 elements:
+(284,274)
+Contour #182
+7 elements:
+(265,274)
+(265,275)
+(265,276)
+(265,277)
+(265,278)
+(265,279)
+(266,280)
+Contour #183
+1 elements:
+(301,273)
+Contour #184
+3 elements:
+(265,270)
+(265,271)
+(265,272)
+Contour #185
+2 elements:
+(4,268)
+(4,269)
+Contour #186
+3 elements:
+(265,266)
+(265,267)
+(265,268)
+Contour #187
+1 elements:
+(4,266)
+Contour #188
+1 elements:
+(57,265)
+Contour #189
+1 elements:
+(197,264)
+Contour #190
+1 elements:
+(5,264)
+Contour #191
+1 elements:
+(211,263)
+Contour #192
+1 elements:
+(207,263)
+Contour #193
+3 elements:
+(193,262)
+(193,263)
+(193,264)
+Contour #194
+1 elements:
+(97,262)
+Contour #195
+1 elements:
+(34,262)
+Contour #196
+1 elements:
+(59,261)
+Contour #197
+1 elements:
+(55,261)
+Contour #198
+1 elements:
+(126,260)
+Contour #199
+1 elements:
+(173,259)
+Contour #200
+1 elements:
+(158,259)
+Contour #201
+1 elements:
+(123,258)
+Contour #202
+2 elements:
+(316,256)
+(316,257)
+Contour #203
+1 elements:
+(181,255)
+Contour #204
+1 elements:
+(187,254)
+Contour #205
+1 elements:
+(242,253)
+Contour #206
+1 elements:
+(216,252)
+Contour #207
+1 elements:
+(125,251)
+Contour #208
+2 elements:
+(227,249)
+(227,250)
+Contour #209
+1 elements:
+(224,248)
+Contour #210
+1 elements:
+(450,247)
+Contour #211
+1 elements:
+(273,246)
+Contour #212
+2 elements:
+(254,246)
+(254,247)
+Contour #213
+1 elements:
+(251,246)
+Contour #214
+1 elements:
+(242,246)
