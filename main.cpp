@@ -30,6 +30,7 @@ int main(int argc, char** argv){
       width = 0;
     }
 #if defined(DEBUG)
+
     if (row == ROW_DEBUG) {
       fp = fopen("input.txt", "wt");
       fprintf(fp, "#\t X\t Y\n");
@@ -73,7 +74,7 @@ int main(int argc, char** argv){
         }
         k = col;
         for (col = 0; col < kernel.size(); col++) {
-          fprintf(fp, "\t %d\t %f\n", k++, kernel[i] * 255);
+          fprintf(fp, "\t %d\t %f\n", k++, kernel[col] * 255);
         }
         for (col = 0; col < right; col++) {
           fprintf(fp, "\t %d\t %f\n", k++, 0.0);
@@ -82,6 +83,16 @@ int main(int argc, char** argv){
       }
 #endif
       normalization(out, img->width, width);
+#if defined(DEBUG)
+      if(row == ROW_DEBUG) {
+        fp = fopen("normalization.txt", "wt");
+        fprintf(fp, "#\t X\t Y\n");
+        for (col = 0; col < img->width; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, out[col]);
+        }
+        fclose(fp);
+      }
+#endif
       localMaximaSuppression(out, img->width);
     }
     else {
@@ -227,7 +238,7 @@ void normalization(std::vector<float>& out, int n, int lane_width){
   for(i = 0; i < n; i++){
     (out[i] > max) ? max = out[i] : max = max;
   }
-  float cut_off = 0.9 * max; 
+  float cut_off = 0.9 *  max; 
   for(i = 0; i < n; i++){
     (out[i] < cut_off) ? out[i] = 0.0 : out[i] = out[i];
   }
