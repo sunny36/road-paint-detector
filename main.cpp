@@ -30,7 +30,7 @@ int main(int argc, char** argv){
       width = 0;
     }
 #if defined(DEBUG)
-    if (row == 374) {
+    if (row == ROW_DEBUG) {
       fp = fopen("input.txt", "wt");
       fprintf(fp, "#\t X\t Y\n");
     }
@@ -39,13 +39,13 @@ int main(int argc, char** argv){
       CvScalar scalar = cvGet2D(img, row, col);
       in[col] = scalar.val[0];
 #if defined(DEBUG)
-      if (row == 374) {
+      if (row == ROW_DEBUG) {
         fprintf(fp, "\t %d\t %d\t\n", col, in[col]);
       }
 #endif
     }
 #if defined(DEBUG)
-    if (row == 374) {
+    if (row == ROW_DEBUG) {
       fclose(fp);
     }
 #endif
@@ -54,7 +54,7 @@ int main(int argc, char** argv){
       convolution.kernel1D(width, kernel);
       convolution.convolve1D(in, kernel, out);
 #if defined(DEBUG)
-      if (row == 374) {
+      if (row == ROW_DEBUG) {
         //convolution result
         fp = fopen("convolution.txt", "wt"); 
         fprintf(fp, "#\t X\t Y\n");

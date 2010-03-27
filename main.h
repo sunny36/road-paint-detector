@@ -19,6 +19,7 @@ const int ONE_PIXEL = 1;
 /*Camera Parameters */
 float FOCAL_LENGTH = 1563.0; 
 
+const int ROW_DEBUG = 374;
 /* Functions */ 
 int calculateWidthInPixels(CvMat* P, float Y);
 float calculateY(CvMat* P, int current_row);
