@@ -94,6 +94,17 @@ int main(int argc, char** argv){
       }
 #endif
       localMaximaSuppression(out, img->width);
+#if defined(DEBUG)
+      if(row == ROW_DEBUG) {
+        fp = fopen("localmaxima.txt", "wt");
+        fprintf(fp, "#\t X\t Y\n");
+        for (col = 0; col < img->width; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, out[col]);
+        }
+        fclose(fp);
+      }
+#endif
+
     }
     else {
       out.resize(img->width); 
