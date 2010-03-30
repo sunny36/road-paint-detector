@@ -21,6 +21,8 @@ int main(int argc, char** argv){
   std::vector<float> kernel;
   std::vector<float> out(640);
   std::vector<int> in(640);
+  std::vector<float> normalized(640);
+  std::vector<float> local_maxima(640);
   Convolution convolution;
   FILE *fp;
   for (row = 0; row < img->height; row++) {
@@ -82,24 +84,24 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
-      normalization(out, img->width, width);
+      normalization(out, normalized, img->width, width);
 #if defined(DEBUG)
       if(row == ROW_DEBUG) {
         fp = fopen("normalization.txt", "wt");
         fprintf(fp, "#\t X\t Y\n");
         for (col = 0; col < img->width; col++) {
-          fprintf(fp, "\t %d\t %f\n", col, out[col]);
+          fprintf(fp, "\t %d\t %f\n", col, normalized[col]);
         }
         fclose(fp);
       }
 #endif
-      localMaximaSuppression(out, img->width);
+      localMaximaSuppression(normalized, local_maxima, img->width);
 #if defined(DEBUG)
       if(row == ROW_DEBUG) {
         fp = fopen("localmaxima.txt", "wt");
         fprintf(fp, "#\t X\t Y\n");
         for (col = 0; col < img->width; col++) {
-          fprintf(fp, "\t %d\t %f\n", col, out[col]);
+          fprintf(fp, "\t %d\t %f\n", col, local_maxima[col]);
         }
         fclose(fp);
       }
@@ -107,14 +109,14 @@ int main(int argc, char** argv){
 
     }
     else {
-      out.resize(img->width); 
+      local_maxima.resize(img->width); 
       for (col = 0; col < img->width; col++) {
-        out[col] = 0;
+        local_maxima[col] = 0;
       }
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
-      scalar.val[0] = out[col];
+      scalar.val[0] = local_maxima[col];
       cvSet2D(img, row, col, scalar);
     }
   } // end for loop
@@ -191,7 +193,9 @@ float calculateY(CvMat* P, int current_row){
   return Y;
 }
 
-void localMaximaSuppression(std::vector<float>& image_row, int row_size){
+void localMaximaSuppression(const std::vector<float> image_row,
+                            std::vector<float>& local_maxima,
+                            int row_size){
   int i; 
   float* image_row_suppressed;
   image_row_suppressed = (float*)calloc(sizeof(float), row_size);
@@ -237,13 +241,16 @@ void localMaximaSuppression(std::vector<float>& image_row, int row_size){
 
   //copy value from image_row_suppressed to image_row
   for(i = 0; i < row_size; i++){
-    image_row[i] = image_row_suppressed[i];
+    local_maxima[i] = image_row_suppressed[i];
   }
   free(image_row_suppressed);
   return; 
 }
 
-void normalization(std::vector<float>& out, int n, int lane_width){
+void normalization(const std::vector<float> out, 
+                   std::vector<float>& normalized,
+                   int n, 
+                   int lane_width){
   float max = 0.0;
   int i; 
   for(i = 0; i < n; i++){
@@ -251,10 +258,10 @@ void normalization(std::vector<float>& out, int n, int lane_width){
   }
   float cut_off = 0.9 *  max; 
   for(i = 0; i < n; i++){
-    (out[i] < cut_off) ? out[i] = 0.0 : out[i] = out[i];
+    (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
   }
   for(i = 0; i < n; i++){
-    out[i] = (out[i] / (255 * lane_width)) * 255;
+    normalized[i] = (normalized[i] / (255 * lane_width)) * 255;
   }
 }
 
