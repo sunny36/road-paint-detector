@@ -17,14 +17,13 @@ int main(int argc, char** argv){
   printf("x = %f, %f, \n", point.x, point.y);
 
   float Y;
-  int row, col, j, k, width;
+  int row, col, width;
   std::vector<float> kernel;
   std::vector<float> out(640);
   std::vector<int> in(640);
   std::vector<float> normalized(640);
   std::vector<float> local_maxima(640);
   Convolution convolution;
-  FILE *fp;
   for (row = 0; row < img->height; row++) {
     Y = calculateY(P, row);
     width = calculateWidthInPixels(P, Y);
@@ -253,10 +252,11 @@ void normalization(const std::vector<float> out,
                    int lane_width){
   float max = 0.0;
   int i; 
-  for(i = 0; i < n; i++){
-    (out[i] > max) ? max = out[i] : max = max;
-  }
-  float cut_off = 0.9 *  max; 
+/* for(i = 0; i < n; i++){*/
+    //(out[i] > max) ? max = out[i] : max = max;
+/* }*/
+  max = 255 * lane_width;
+  float cut_off = 0.1 *  max; 
   for(i = 0; i < n; i++){
     (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
   }

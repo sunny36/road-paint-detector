@@ -16,9 +16,9 @@ void Contour::findContours(IplImage* image, Camera camera){
                                           CV_RETR_LIST, 
                                           CV_CHAIN_APPROX_NONE
                                         );
-   printContours(contours, number_of_contours, "contours.txt");
+   printContours(contours, "contours.txt");
    removeDuplicatesInContours(contours); 
-   printContours(contours, number_of_contours, "contours_no_dup.txt");
+   printContours(contours, "contours_no_dup.txt");
 
    std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences;
    CvSeq* c = contours;
@@ -39,8 +39,8 @@ void Contour::findContours(IplImage* image, Camera camera){
 
    IplImage *img1 = cvCreateImage(cvSize(640, 480), 8, 1); 
    cvNamedWindow("ground_points", CV_WINDOW_AUTOSIZE); 
-  for (i = 0; i < ground_plane_sequences.size(); i++) {
-    for (j = 0; j < ground_plane_sequences[i].size(); j++) {
+  for (i = 0; i < static_cast<int>(ground_plane_sequences.size()); i++) {
+    for (j = 0; j < static_cast<int>(ground_plane_sequences[i].size()); j++) {
       CvScalar s; 
       s.val[0] = 255;
       if(ground_plane_sequences[i][j].x >= 0 && 
@@ -66,8 +66,8 @@ void Contour::findContours(IplImage* image, Camera camera){
 
 void Contour::scaleGroundPlaneSequences(std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
    int i, j; 
-  for (i = 0; i < ground_plane_sequences.size(); i++) {
-    for (j = 0; j < ground_plane_sequences[i].size(); j++) {
+  for (i = 0; i < static_cast<int>(ground_plane_sequences.size()); i++) {
+    for (j = 0; j < static_cast<int>(ground_plane_sequences[i].size()); j++) {
       ground_plane_sequences[i][j].x = 320 + ground_plane_sequences[i][j].x * 10;
       ground_plane_sequences[i][j].y = 479 - ground_plane_sequences[i][j].y * 10;
     }
@@ -81,16 +81,14 @@ void Contour::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_s
   cvZero(image_lines); 
   int i, j;
   float line[4];
-  CvPoint pt1, pt2; 
-  float t,d;
   CvPoint left, right; 
 
-  for(i = 0; i < ground_plane_sequences.size(); i++){
+  for(i = 0; i < static_cast<int>(ground_plane_sequences.size()); i++){
 
     CvPoint* points = (CvPoint*)malloc(ground_plane_sequences[i].size() * sizeof(points[0]));
     CvMat pointMat = cvMat(1, ground_plane_sequences[i].size(), CV_32SC2, points); 
 
-    for(j = 0; j < ground_plane_sequences[i].size(); j++){
+    for(j = 0; j < static_cast<int>(ground_plane_sequences[i].size()); j++){
       points[j].x = cvRound(ground_plane_sequences[i][j].x); 
       points[j].y = cvRound(ground_plane_sequences[i][j].y); 
     }
@@ -130,7 +128,7 @@ void Contour::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_s
 }
 
 IplImage* Contour::drawContours(){
-  CvSeq* c = contours;
+  //CvSeq* c = contours;
 //  int max=0;
 //  for(; c != NULL; c = (CvSeq*)(c->h_next)){
 //    if(c->total > max) max = c->total;
@@ -166,7 +164,6 @@ void Contour::removeUnwantedContour(){
 }
 
 void Contour::printContours(CvSeq* contours, 
-                            int number_of_contours, 
                             const std::string filename){
     int i, n= 0;
     std::ofstream out(filename.c_str());
@@ -188,10 +185,10 @@ void Contour::printContours(std::vector< std::vector<CvPoint2D32f> > contours,
   int i, j = 0; 
   std::ofstream out(filename.c_str()); 
   out << "NUmber of contours = " << contours.size() << std::endl;
-  for(i = 0; i < contours.size(); i++){
+  for(i = 0; i < static_cast<int>(contours.size()); i++){
     out << "Contour #" << i << std::endl; 
     out << contours[i].size() << " elements:" << std::endl;
-    for(j = 0; j < contours[i].size(); j++){
+    for(j = 0; j < static_cast<int>(contours[i].size()); j++){
       out << "(" << contours[i][j].x << ", "  << contours[i][j].y << ")" 
         << std::endl; 
     }

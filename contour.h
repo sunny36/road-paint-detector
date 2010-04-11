@@ -24,7 +24,6 @@ class Contour{
 	  CvSeq* contours; 
     IplImage* copied_image;
     void printContours(CvSeq* contours, 
-                       int number_of_contours,
                        std::string filename);
     void printContours(std::vector< std::vector<CvPoint2D32f> > contours, 
                        const std::string filename);
