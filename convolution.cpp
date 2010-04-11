@@ -6,25 +6,27 @@ void Convolution::convolve1D(std::vector<int> in, std::vector<float> kernel,
   int new_row_width = (640 + (kernel.size() - 1));
   std::vector<int> in_with_borders(new_row_width);
 
-  for (i = 0; i < ((kernel.size() - 1) / 2); i++){
+  for (i = 0; i < ((static_cast<int>(kernel.size()) - 1) / 2); i++){
     in_with_borders[i] = in[0];
   }
   for (i = 0; i < 640; i++) {
-    in_with_borders[i + ((kernel.size() - 1) / 2)] = in[i];
+    in_with_borders[i + ((static_cast<int>(kernel.size())- 1) / 2)] = in[i];
   }
-  for(i = 0; i < (kernel.size() - 1)/2; i++){
-    in_with_borders[i + (640 + (kernel.size() - 1) / 2)] = in[639];
+  for(i = 0; i < (static_cast<int>(kernel.size()) - 1)/2; i++){
+    in_with_borders[i + (640 + (static_cast<int>(kernel.size()) - 1) / 2)] = in[639];
   }
   std::vector<float> out_with_borders(new_row_width);
   
-  for(i = kernel.size() - 1; i < (in.size() + kernel.size() +  - 1); ++i){
+  for(i = static_cast<int>(kernel.size()) - 1; 
+      i < (static_cast<int>(in.size()) + static_cast<int>(kernel.size()) +  - 1);
+      ++i){
     out_with_borders[i] = 0; // init to 0 before accumulate
-    for(j = i, k = 0; k < kernel.size(); --j, ++k){
+    for(j = i, k = 0; k < static_cast<int>(kernel.size()); --j, ++k){
       out_with_borders[i] += in_with_borders[j] * kernel[k];
     }	            
   }
 
-  for(i = 0; i < kernel.size() - 1; ++i){
+  for(i = 0; i < static_cast<int>(kernel.size()) - 1; ++i){
     out_with_borders[i] = 0;  // init to 0 before sum
     for(j = i, k = 0; j >= 0; --j, ++k){
       out_with_borders[i] += in_with_borders[j] * kernel[k];
@@ -32,7 +34,7 @@ void Convolution::convolve1D(std::vector<int> in, std::vector<float> kernel,
   }
   out.resize(640);
   for(i = 0; i < 640; i++){
-    out[i] = out_with_borders[i + ((kernel.size() - 1))];
+    out[i] = out_with_borders[i + ((static_cast<int>(kernel.size()) - 1))];
 
   }
 
@@ -46,7 +48,7 @@ void Convolution::kernel1D(int width, std::vector<float>& kernel){
   int i, j;
   int left_edge, right_edge;
 
-  for(i = 0; i < kernel.size(); i++){
+  for(i = 0; i < static_cast<int>(kernel.size()); i++){
     kernel[i] = 1;
   }
 

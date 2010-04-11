@@ -17,12 +17,13 @@ int main(int argc, char** argv){
   printf("x = %f, %f, \n", point.x, point.y);
 
   float Y;
-  int row, col, j, k, width;
+  int row, col, width;
   std::vector<float> kernel;
   std::vector<float> out(640);
   std::vector<int> in(640);
+  std::vector<float> normalized(640);
+  std::vector<float> local_maxima(640);
   Convolution convolution;
-  FILE *fp;
   for (row = 0; row < img->height; row++) {
     Y = calculateY(P, row);
     width = calculateWidthInPixels(P, Y);
@@ -30,7 +31,8 @@ int main(int argc, char** argv){
       width = 0;
     }
 #if defined(DEBUG)
-    if (row == 374) {
+
+    if (row == ROW_DEBUG) {
       fp = fopen("input.txt", "wt");
       fprintf(fp, "#\t X\t Y\n");
     }
@@ -39,13 +41,13 @@ int main(int argc, char** argv){
       CvScalar scalar = cvGet2D(img, row, col);
       in[col] = scalar.val[0];
 #if defined(DEBUG)
-      if (row == 374) {
+      if (row == ROW_DEBUG) {
         fprintf(fp, "\t %d\t %d\t\n", col, in[col]);
       }
 #endif
     }
 #if defined(DEBUG)
-    if (row == 374) {
+    if (row == ROW_DEBUG) {
       fclose(fp);
     }
 #endif
@@ -54,7 +56,7 @@ int main(int argc, char** argv){
       convolution.kernel1D(width, kernel);
       convolution.convolve1D(in, kernel, out);
 #if defined(DEBUG)
-      if (row == 374) {
+      if (row == ROW_DEBUG) {
         //convolution result
         fp = fopen("convolution.txt", "wt"); 
         fprintf(fp, "#\t X\t Y\n");
@@ -73,7 +75,7 @@ int main(int argc, char** argv){
         }
         k = col;
         for (col = 0; col < kernel.size(); col++) {
-          fprintf(fp, "\t %d\t %f\n", k++, kernel[i] * 255);
+          fprintf(fp, "\t %d\t %f\n", k++, kernel[col] * 255);
         }
         for (col = 0; col < right; col++) {
           fprintf(fp, "\t %d\t %f\n", k++, 0.0);
@@ -81,18 +83,39 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
-      normalization(out, img->width, width);
-      localMaximaSuppression(out, img->width);
+      normalization(out, normalized, img->width, width);
+#if defined(DEBUG)
+      if(row == ROW_DEBUG) {
+        fp = fopen("normalization.txt", "wt");
+        fprintf(fp, "#\t X\t Y\n");
+        for (col = 0; col < img->width; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, normalized[col]);
+        }
+        fclose(fp);
+      }
+#endif
+      localMaximaSuppression(normalized, local_maxima, img->width);
+#if defined(DEBUG)
+      if(row == ROW_DEBUG) {
+        fp = fopen("localmaxima.txt", "wt");
+        fprintf(fp, "#\t X\t Y\n");
+        for (col = 0; col < img->width; col++) {
+          fprintf(fp, "\t %d\t %f\n", col, local_maxima[col]);
+        }
+        fclose(fp);
+      }
+#endif
+
     }
     else {
-      out.resize(img->width); 
+      local_maxima.resize(img->width); 
       for (col = 0; col < img->width; col++) {
-        out[col] = 0;
+        local_maxima[col] = 0;
       }
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
-      scalar.val[0] = out[col];
+      scalar.val[0] = local_maxima[col];
       cvSet2D(img, row, col, scalar);
     }
   } // end for loop
@@ -169,7 +192,9 @@ float calculateY(CvMat* P, int current_row){
   return Y;
 }
 
-void localMaximaSuppression(std::vector<float>& image_row, int row_size){
+void localMaximaSuppression(const std::vector<float> image_row,
+                            std::vector<float>& local_maxima,
+                            int row_size){
   int i; 
   float* image_row_suppressed;
   image_row_suppressed = (float*)calloc(sizeof(float), row_size);
@@ -215,24 +240,28 @@ void localMaximaSuppression(std::vector<float>& image_row, int row_size){
 
   //copy value from image_row_suppressed to image_row
   for(i = 0; i < row_size; i++){
-    image_row[i] = image_row_suppressed[i];
+    local_maxima[i] = image_row_suppressed[i];
   }
   free(image_row_suppressed);
   return; 
 }
 
-void normalization(std::vector<float>& out, int n, int lane_width){
+void normalization(const std::vector<float> out, 
+                   std::vector<float>& normalized,
+                   int n, 
+                   int lane_width){
   float max = 0.0;
   int i; 
+/* for(i = 0; i < n; i++){*/
+    //(out[i] > max) ? max = out[i] : max = max;
+/* }*/
+  max = 255 * lane_width;
+  float cut_off = 0.1 *  max; 
   for(i = 0; i < n; i++){
-    (out[i] > max) ? max = out[i] : max = max;
+    (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
   }
-  float cut_off = 0.9 * max; 
   for(i = 0; i < n; i++){
-    (out[i] < cut_off) ? out[i] = 0.0 : out[i] = out[i];
-  }
-  for(i = 0; i < n; i++){
-    out[i] = (out[i] / (255 * lane_width)) * 255;
+    normalized[i] = (normalized[i] / (255 * lane_width)) * 255;
   }
 }
 
