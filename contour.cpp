@@ -20,9 +20,14 @@ void Contour::findContours(IplImage* image, Camera camera){
    removeDuplicatesInContours(contours); 
    printContours(contours, "contours_no_dup.txt");
 
+   std::vector< std::vector<CvPoint> > image_plane_sequences; 
+   getImagePlaneSequences(&contours, image_plane_sequences);
+   connectNearComponents(image_plane_sequences);
+   printContours(image_plane_sequences, "contours_no_dup(connected).txt"); 
+
    std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences;
    CvSeq* c = contours;
-   int i, j;
+   int i;
    for(; c != NULL; c = (CvSeq*)(c->h_next)){
      std::vector<CvPoint2D32f> sequence; 
      for(i = 0; i < c->total; i++){
@@ -33,35 +38,67 @@ void Contour::findContours(IplImage* image, Camera camera){
      ground_plane_sequences.push_back(sequence);
    }
    printContours(ground_plane_sequences, "contours_ground_plane.txt"); 
-  
    scaleGroundPlaneSequences(ground_plane_sequences);
-
-
-   IplImage *img1 = cvCreateImage(cvSize(640, 480), 8, 1); 
-   cvNamedWindow("ground_points", CV_WINDOW_AUTOSIZE); 
-  for (i = 0; i < static_cast<int>(ground_plane_sequences.size()); i++) {
-    for (j = 0; j < static_cast<int>(ground_plane_sequences[i].size()); j++) {
-      CvScalar s; 
-      s.val[0] = 255;
-      if(ground_plane_sequences[i][j].x >= 0 && 
-         ground_plane_sequences[i][j].x < 640 &&
-         ground_plane_sequences[i][j].y >= 0 &&
-         ground_plane_sequences[i][j].y < 480) {
-        //swap x and y so that it shows correctly 
-      cvSet2D(img1, 
-              cvRound(ground_plane_sequences[i][j].y), 
-              cvRound(ground_plane_sequences[i][j].x), 
-              s); 
-
-      }
-    }
-  }
-
    printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
-
    drawLines(ground_plane_sequences);
 
-   cvShowImage("ground_points", img1);
+}
+
+void Contour::getImagePlaneSequences(CvSeq **contours, 
+                                     std::vector< std::vector <CvPoint> >& image_plane_sequences) {
+  CvSeq* c = *contours;
+  int i;
+  for(; c != NULL; c = (CvSeq*)(c->h_next)){
+    std::vector<CvPoint> sequence; 
+    for(i = 0; i < c->total; i++){
+      CvPoint* pt = CV_GET_SEQ_ELEM(CvPoint, c, i);        
+      sequence.push_back(cvPoint(pt->x, pt->y)); 
+    }
+    image_plane_sequences.push_back(sequence);
+  }
+  return;
+}
+
+void Contour::connectNearComponents(std::vector< std::vector<CvPoint> >& image_plane_sequences) {
+  int i, j; 
+  for (i = 0; i < static_cast<int>(image_plane_sequences.size()); i++) {
+   CvPoint min_y = minY(image_plane_sequences[i]);
+   for (j = i; j < static_cast<int>(image_plane_sequences.size()); j++) {
+     CvPoint max_y = maxY(image_plane_sequences[j]); 
+     if (abs(max_y.x - min_y.x) <= 2 && abs(max_y.y - min_y.y) <= 2) {
+       image_plane_sequences[i].insert(image_plane_sequences[i].end(), 
+                                       image_plane_sequences[j].begin(), 
+                                       image_plane_sequences[j].end()); 
+       image_plane_sequences.erase(image_plane_sequences.begin() + j);
+     }
+   }
+  }
+}
+
+CvPoint Contour::minY(std::vector<CvPoint> points) {
+  int min = points[0].y; 
+  int i; 
+  CvPoint pt;
+  for (i = 0; i < static_cast<int>(points.size()); i++) {
+    if (points[i].y < min) {
+      min = points[i].y;
+      pt = points[i];
+    }
+  }
+  return pt;
+}
+
+CvPoint Contour::maxY(std::vector<CvPoint> points) {
+  int max = points[0].y; 
+  int i; 
+  CvPoint pt;
+  for (i = 0; i < static_cast<int>(points.size()); i++) {
+    if (points[i].y > max) {
+      max = points[i].y;
+      pt = points[i];
+    }
+  }
+  return pt;
 }
 
 void Contour::scaleGroundPlaneSequences(std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
@@ -197,24 +234,37 @@ void Contour::printContours(std::vector< std::vector<CvPoint2D32f> > contours,
   return;
 }
 
+void Contour::printContours(std::vector< std::vector<CvPoint> > contours, 
+  const std::string filename){
+  int i, j = 0; 
+  std::ofstream out(filename.c_str()); 
+  out << "NUmber of contours = " << contours.size() << std::endl;
+  for(i = 0; i < static_cast<int>(contours.size()); i++){
+    out << "Contour #" << i << std::endl; 
+    out << contours[i].size() << " elements:" << std::endl;
+    for(j = 0; j < static_cast<int>(contours[i].size()); j++){
+      out << "(" << contours[i][j].x << ", "  << contours[i][j].y << ")" 
+        << std::endl; 
+    }
+    //std::cout << std::endl; 
+  }
+  return;
+}
+
 void Contour::removeDuplicatesInContours(CvSeq* contours){
   int i, j;
   for(CvSeq* c = contours; c != NULL; c = c->h_next){
-
     for(i = 0; i < c->total; i++){
       CvPoint *current_point = CV_GET_SEQ_ELEM(CvPoint, c, i);
-
       for(j = i + 1; j < c->total; j++){
         //don't remove current point
-          CvPoint *other_point = CV_GET_SEQ_ELEM(CvPoint, c, j);
-          if( current_point->x == other_point->x && 
-              current_point->y == other_point->y ){
-            cvSeqRemove(c, j);
-          }
+        CvPoint *other_point = CV_GET_SEQ_ELEM(CvPoint, c, j);
+        if( current_point->x == other_point->x && 
+            current_point->y == other_point->y ){
+          cvSeqRemove(c, j);
+        }
       }
-
     }
   }
-
   return;
 }
