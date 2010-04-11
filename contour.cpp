@@ -16,14 +16,15 @@ void Contour::findContours(IplImage* image, Camera camera){
                                           CV_RETR_LIST, 
                                           CV_CHAIN_APPROX_NONE
                                         );
-   printContours(contours, "contours.txt");
+   IO io;
+   io.printContours(contours, "contours.txt");
    removeDuplicatesInContours(contours); 
-   printContours(contours, "contours_no_dup.txt");
+   io.printContours(contours, "contours_no_dup.txt");
 
    std::vector< std::vector<CvPoint> > image_plane_sequences; 
    getImagePlaneSequences(&contours, image_plane_sequences);
    connectNearComponents(image_plane_sequences);
-   printContours(image_plane_sequences, "contours_no_dup(connected).txt"); 
+   io.printContours(image_plane_sequences, "contours_no_dup(connected).txt"); 
 
    std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences;
    CvSeq* c = contours;
@@ -37,9 +38,9 @@ void Contour::findContours(IplImage* image, Camera camera){
      }
      ground_plane_sequences.push_back(sequence);
    }
-   printContours(ground_plane_sequences, "contours_ground_plane.txt"); 
+   io.printContours(ground_plane_sequences, "contours_ground_plane.txt"); 
    scaleGroundPlaneSequences(ground_plane_sequences);
-   printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
+   io.printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
    drawLines(ground_plane_sequences);
 
 }
@@ -198,57 +199,6 @@ void Contour::removeUnwantedContour(){
       }
     } 
   }
-}
-
-void Contour::printContours(CvSeq* contours, 
-                            const std::string filename){
-    int i, n= 0;
-    std::ofstream out(filename.c_str());
-    out << "Number of contours = " << n << std::endl;
-    for (CvSeq* c = contours; c!=NULL; c=c->h_next) {
-      out << "Contour #" << n << std::endl;
-      out << c->total << " elements:" << std::endl;
-      for (i = 0; i < c->total; i++) {
-        CvPoint* p = CV_GET_SEQ_ELEM(CvPoint, c, i);        
-        out << "(" << p->x << "," << p->y << ")" << std::endl; 
-      }
-     n++;
-    }
-    return;
-}
-
-void Contour::printContours(std::vector< std::vector<CvPoint2D32f> > contours, 
-    const std::string filename){
-  int i, j = 0; 
-  std::ofstream out(filename.c_str()); 
-  out << "NUmber of contours = " << contours.size() << std::endl;
-  for(i = 0; i < static_cast<int>(contours.size()); i++){
-    out << "Contour #" << i << std::endl; 
-    out << contours[i].size() << " elements:" << std::endl;
-    for(j = 0; j < static_cast<int>(contours[i].size()); j++){
-      out << "(" << contours[i][j].x << ", "  << contours[i][j].y << ")" 
-        << std::endl; 
-    }
-    //std::cout << std::endl; 
-  }
-  return;
-}
-
-void Contour::printContours(std::vector< std::vector<CvPoint> > contours, 
-  const std::string filename){
-  int i, j = 0; 
-  std::ofstream out(filename.c_str()); 
-  out << "NUmber of contours = " << contours.size() << std::endl;
-  for(i = 0; i < static_cast<int>(contours.size()); i++){
-    out << "Contour #" << i << std::endl; 
-    out << contours[i].size() << " elements:" << std::endl;
-    for(j = 0; j < static_cast<int>(contours[i].size()); j++){
-      out << "(" << contours[i][j].x << ", "  << contours[i][j].y << ")" 
-        << std::endl; 
-    }
-    //std::cout << std::endl; 
-  }
-  return;
 }
 
 void Contour::removeDuplicatesInContours(CvSeq* contours){
