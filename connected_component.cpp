@@ -11,6 +11,11 @@ void ConnectedComponent::setImage(int (&img)[8][8]) {
       _label[i][j] = 0; 
     }
   }
+
+  _parent.resize(8 * 8); 
+  for (i = 0; i < static_cast<int>(_parent.size()); i++) {
+    _parent[i] = 0; 
+  }
 }
 
 int ConnectedComponent::getImgElement(int x, int y) {
@@ -59,4 +64,53 @@ boost::tuple<int, int> ConnectedComponent::getLabelNeighbours(int x, int y) {
   return boost::make_tuple(north, west);
 }
 
+void ConnectedComponent::runPass1() {
+  int i, j, north, west; 
+  int M, label; 
 
+  label = 1;
+  for (i = 0; i < 8; i++) {
+    for (j = 0; j < 8; j++) {
+      if (_img[i][j] == 1) {
+        boost::tie(north, west) = (*this).getLabelNeighbours(i, j); 
+        if ( (north==0) && (west==0) ) {
+          M = label; label++; 
+        } 
+        else {
+          if(north == 0) {
+            M = west;
+          }
+          else if(west == 0) {
+            M = north;
+          }
+          else {
+            M = (north < west) ? north : west; 
+          }
+          if ((north != M) && (north != 0)) (*this)._union(M, north);
+          if (west != M && (west != 0)) (*this)._union(M, west);
+        }
+        (*this).setLabelElement(i, j, M);
+      }
+    }
+  }
+}
+
+void ConnectedComponent::_union(int X, int Y) {
+  int j = X; 
+  int k = Y; 
+  while(_parent[j] != 0) {
+    j = _parent[j]; 
+  }
+  while(_parent[k] != 0) { 
+    k = _parent[k]; 
+  }
+  if (j != k ) {
+    _parent[k] = j; 
+  }
+
+  //std::cout << X << ", " << Y << std::endl;
+}
+
+std::vector<int> ConnectedComponent::getParent() { 
+  return _parent; 
+}

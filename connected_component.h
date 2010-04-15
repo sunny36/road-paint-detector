@@ -3,6 +3,7 @@
 
 #include <boost/tuple/tuple.hpp> 
 #include <vector> 
+#include <iostream> 
 
 class ConnectedComponent {
 
@@ -10,6 +11,7 @@ class ConnectedComponent {
     int _img[8][8]; 
     int _label[8][8];
     std::vector<int> _parent; 
+    void _union(int M, int X);
 
   public:
     ConnectedComponent();
@@ -19,6 +21,8 @@ class ConnectedComponent {
     int getLabelElement(int x, int y);
     boost::tuple<int, int> getImgNeighbours(int x, int y);
     boost::tuple<int, int> getLabelNeighbours(int x, int y);
+    void runPass1();
+    std::vector<int> getParent();
 };
 
 #endif
