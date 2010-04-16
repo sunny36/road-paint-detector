@@ -10,7 +10,7 @@ class ConnectedComponent {
 
   private:
     cv::Mat _img; 
-    int _label[8][8];
+    cv::Mat _label; 
     std::vector<int> _parent; 
     void _union(int M, int X);
     int _find(int X);
