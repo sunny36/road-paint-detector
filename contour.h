@@ -32,6 +32,11 @@ class Contour{
     void connectNearComponents(std::vector< std::vector<CvPoint> >& image_plane_sequences);
     CvPoint minY(std::vector<CvPoint> points);
     CvPoint maxY(std::vector<CvPoint> points);
+    void image2GroundPlaneSequences(
+      const std::vector< std::vector<CvPoint> >& image_plane_sequences,
+      std::vector< std::vector<CvPoint2D32f> >& ground_plane_sequences,
+      Camera& camera);
+
 };
 
 #endif

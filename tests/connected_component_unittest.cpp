@@ -6,7 +6,7 @@
 class ConnectedComponentTest : public testing::Test { 
   protected:
     virtual void SetUp() { 
-      int img[8][8] = { 
+      int data[8][8] = { 
         {1, 1, 0, 1, 1, 1, 0, 1},
         {1, 1, 0, 1, 0, 1, 0, 1},
         {1, 1, 1, 1, 0, 0, 0, 1},
@@ -16,7 +16,8 @@ class ConnectedComponentTest : public testing::Test {
         {1, 1, 0, 1, 0, 0, 0, 1},
         {1, 1, 0, 1, 0, 1, 1, 1}
       };
-
+      
+      cv::Mat img = cv::Mat(8, 8, CV_32S, data); 
       connected_component.setImage(img);
     }
 
@@ -24,9 +25,9 @@ class ConnectedComponentTest : public testing::Test {
 };
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectValue) {
-  EXPECT_EQ(connected_component.getImgElement(0, 0), 1); 
-  EXPECT_EQ(connected_component.getImgElement(6, 6), 0); 
-  EXPECT_EQ(connected_component.getImgElement(7, 7), 1); 
+  EXPECT_EQ(1, connected_component.getImgElement(0, 0)); 
+  EXPECT_EQ(0, connected_component.getImgElement(6, 6)); 
+  EXPECT_EQ(1, connected_component.getImgElement(7, 7)); 
 }
 
 TEST_F(ConnectedComponentTest, ShouldSetLabelValueGivenXY) {
@@ -37,8 +38,6 @@ TEST_F(ConnectedComponentTest, ShouldSetLabelValueGivenXY) {
   EXPECT_EQ(1, connected_component.getLabelElement(3,3)); 
   
   EXPECT_EQ(0, connected_component.getLabelElement(7,7)); 
-
-
 }
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectNeighbours) {
@@ -84,7 +83,7 @@ TEST_F(ConnectedComponentTest, ShouldReturnCorrectResultAfterPass1) {
 }
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectLabelAfterPass2) { 
-  //must run pass1 before pass2
+  /* must run pass1 before pass2 */
   connected_component.runPass1(); 
   connected_component.runPass2(); 
 

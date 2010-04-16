@@ -102,14 +102,14 @@ camera_unittest : camera.o camera_unittest.o gtest_main.a
 ##############################################################################
 connected_component.o : $(USER_DIR)/connected_component.cpp $(USER_DIR)/connected_component.h \
   							$(GTEST_HEADERS)
-	$(CXX) $(ARCH) $(CXXFLAGS) -c $(USER_DIR)/connected_component.cpp
+	$(CXX) $(ARCH) $(OPENCV_INCL) $(CXXFLAGS) -c $(USER_DIR)/connected_component.cpp
 
 connected_component_unittest.o : connected_component_unittest.cpp \
                       	 $(USER_DIR)/connected_component.h $(GTEST_HEADERS)
-	$(CXX)  $(ARCH) $(CPPFLAGS) $(CXXFLAGS) -c \
+	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
 	connected_component_unittest.cpp 
 
 connected_component_unittest : connected_component.o connected_component_unittest.o gtest_main.a
-	$(CXX)  $(ARCH) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+	$(CXX)  $(ARCH) $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 ##############################################################################
 

@@ -3,11 +3,12 @@
 ConnectedComponent::ConnectedComponent() {
 }
 
-void ConnectedComponent::setImage(int (&img)[8][8]) {
+void ConnectedComponent::setImage(cv::Mat img) {
+  (*this)._img = img.clone(); 
+
   int i, j;
   for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++) {
-      _img[i][j] = img[i][j];
       _label[i][j] = 0; 
     }
   }
@@ -19,7 +20,7 @@ void ConnectedComponent::setImage(int (&img)[8][8]) {
 }
 
 int ConnectedComponent::getImgElement(int x, int y) {
-  return _img[x][y];
+  return _img.at<int>(x, y);
 }
 
 void ConnectedComponent::setLabelElement(int x, int y, int value) {
@@ -37,8 +38,8 @@ std::vector<int> ConnectedComponent::getParent() {
 
 std::map<std::string, int> ConnectedComponent::getImgNeighbours(int x, int y) {
   int north, west; 
-  north = (x > 0) ? _img[x-1][y] : 0; 
-  west = (y > 0) ? _img[x][y-1] : 0; 
+  north = (x > 0) ? (*this).getImgElement(x - 1, y) : 0; 
+  west = (y > 0) ? (*this).getImgElement(x, y - 1) : 0; 
 
   std::map<std::string, int> neighbours; 
   neighbours["north"] = north; 
@@ -98,7 +99,7 @@ void ConnectedComponent::runPass2() {
   int i, j; 
   for(i = 0; i < 8; i++) { 
     for(j = 0; j < 8; j++) { 
-      if(_img[i][j] == 1) {
+      if((*this).getImgElement(i, j) == 1) {
         _label[i][j] = (*this)._find(_label[i][j]); 
       }
     }

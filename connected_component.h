@@ -1,15 +1,15 @@
 #ifndef CONNECTED_COMPONENT_H
 #define CONNECTED_COMPONENT_H
 
-#include <boost/tuple/tuple.hpp> 
 #include <vector> 
 #include <iostream> 
 #include <map> 
+#include <cv.h>
 
 class ConnectedComponent {
 
   private:
-    int _img[8][8]; 
+    cv::Mat _img; 
     int _label[8][8];
     std::vector<int> _parent; 
     void _union(int M, int X);
@@ -17,7 +17,7 @@ class ConnectedComponent {
 
   public:
     ConnectedComponent();
-    void setImage(int (&img)[8][8]);
+    void setImage(cv::Mat img);
     int getImgElement(int x, int y); 
     void setLabelElement(int x, int y, int value);
     int getLabelElement(int x, int y);

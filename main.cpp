@@ -115,11 +115,15 @@ int main(int argc, char** argv){
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
+      if (local_maxima[col] > 1) {
+        local_maxima[col] = 255;
+      }
       scalar.val[0] = local_maxima[col];
       cvSet2D(img, row, col, scalar);
     }
   } // end for loop
 
+  cvSaveImage("output.jpg", img);
   Contour contour;
   contour.findContours(img, camera);
   img = contour.drawContours();

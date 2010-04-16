@@ -27,17 +27,18 @@ void Contour::findContours(IplImage* image, Camera camera){
    io.printContours(image_plane_sequences, "contours_no_dup(connected).txt"); 
 
    std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences;
-   CvSeq* c = contours;
-   int i;
-   for(; c != NULL; c = (CvSeq*)(c->h_next)){
-     std::vector<CvPoint2D32f> sequence; 
-     for(i = 0; i < c->total; i++){
-       CvPoint* pt = CV_GET_SEQ_ELEM(CvPoint, c, i);        
-       CvPoint2D32f ground_pt = camera.imageToGroundPlane(*pt); 
-       sequence.push_back(ground_pt);
-     }
-     ground_plane_sequences.push_back(sequence);
-   }
+   image2GroundPlaneSequences(image_plane_sequences, ground_plane_sequences, camera); 
+   //CvSeq* c = contours;
+   //int i;
+   //for(; c != NULL; c = (CvSeq*)(c->h_next)){
+     //std::vector<CvPoint2D32f> sequence; 
+     //for(i = 0; i < c->total; i++){
+       //CvPoint* pt = CV_GET_SEQ_ELEM(CvPoint, c, i);        
+       //CvPoint2D32f ground_pt = camera.imageToGroundPlane(*pt); 
+       //sequence.push_back(ground_pt);
+     //}
+     //ground_plane_sequences.push_back(sequence);
+   //}
    io.printContours(ground_plane_sequences, "contours_ground_plane.txt"); 
    scaleGroundPlaneSequences(ground_plane_sequences);
    io.printContours(ground_plane_sequences, "contours_ground_plane(scale).txt"); 
@@ -60,26 +61,47 @@ void Contour::getImagePlaneSequences(CvSeq **contours,
   return;
 }
 
+void Contour::image2GroundPlaneSequences(
+    const std::vector< std::vector<CvPoint> >& image_plane_sequences,
+    std::vector< std::vector<CvPoint2D32f> >& ground_plane_sequences, 
+    Camera& camera) {
+  int i, j; 
+  for (i = 0; i < static_cast<int>(image_plane_sequences.size()); i++) {
+    std::vector<CvPoint2D32f> sequence;
+    for (j = 0; j < static_cast<int>(image_plane_sequences[i].size()); j++) {
+     CvPoint2D32f ground_pt = camera.imageToGroundPlane(image_plane_sequences[i][j]); 
+     sequence.push_back(ground_pt);
+    }
+    ground_plane_sequences.push_back(sequence);
+  }
+
+  return; 
+}
+
+
 void Contour::connectNearComponents(std::vector< std::vector<CvPoint> >& image_plane_sequences) {
   int i, j; 
   for (i = 0; i < static_cast<int>(image_plane_sequences.size()); i++) {
-   CvPoint min_y = minY(image_plane_sequences[i]);
-   for (j = i; j < static_cast<int>(image_plane_sequences.size()); j++) {
-     CvPoint max_y = maxY(image_plane_sequences[j]); 
-     if (abs(max_y.x - min_y.x) <= 2 && abs(max_y.y - min_y.y) <= 2) {
-       image_plane_sequences[i].insert(image_plane_sequences[i].end(), 
-                                       image_plane_sequences[j].begin(), 
-                                       image_plane_sequences[j].end()); 
-       image_plane_sequences.erase(image_plane_sequences.begin() + j);
-     }
-   }
+    CvPoint min_y = minY(image_plane_sequences[i]);
+    for (j = 0; j < static_cast<int>(image_plane_sequences.size()); j++) {
+      if( i != j) {
+        CvPoint max_y = maxY(image_plane_sequences[j]); 
+        if (abs(max_y.x - min_y.x) <= 2 && abs(max_y.y - min_y.y) <= 2) {
+          image_plane_sequences[i].insert(image_plane_sequences[i].end(), 
+              image_plane_sequences[j].begin(), 
+              image_plane_sequences[j].end()); 
+          image_plane_sequences.erase(image_plane_sequences.begin() + j);
+        }
+
+      }
+    }
   }
 }
 
 CvPoint Contour::minY(std::vector<CvPoint> points) {
   int min = points[0].y; 
+  CvPoint pt = points[0];
   int i; 
-  CvPoint pt;
   for (i = 0; i < static_cast<int>(points.size()); i++) {
     if (points[i].y < min) {
       min = points[i].y;
@@ -91,8 +113,8 @@ CvPoint Contour::minY(std::vector<CvPoint> points) {
 
 CvPoint Contour::maxY(std::vector<CvPoint> points) {
   int max = points[0].y; 
+  CvPoint pt = points[0];
   int i; 
-  CvPoint pt;
   for (i = 0; i < static_cast<int>(points.size()); i++) {
     if (points[i].y > max) {
       max = points[i].y;
