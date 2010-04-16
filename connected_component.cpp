@@ -6,9 +6,8 @@ ConnectedComponent::ConnectedComponent() {
 void ConnectedComponent::setImage(cv::Mat img) {
   (*this)._img = img.clone(); 
   (*this)._label = cv::Mat::zeros((*this)._img.rows, (*this)._img.cols, CV_32S); 
-  int i;
-  _parent.resize(8 * 8); 
-  for (i = 0; i < static_cast<int>(_parent.size()); i++) {
+  _parent.resize((*this)._img.rows * (*this)._img.cols); 
+  for (int i = 0; i < static_cast<int>(_parent.size()); i++) {
     _parent[i] = 0; 
   }
 }
