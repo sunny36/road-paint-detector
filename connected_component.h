@@ -12,7 +12,7 @@ class ConnectedComponent {
     int _label[8][8];
     std::vector<int> _parent; 
     void _union(int M, int X);
-
+    int _find(int X);
   public:
     ConnectedComponent();
     void setImage(int (&img)[8][8]);
@@ -22,7 +22,9 @@ class ConnectedComponent {
     boost::tuple<int, int> getImgNeighbours(int x, int y);
     boost::tuple<int, int> getLabelNeighbours(int x, int y);
     void runPass1();
+    void runPass2();
     std::vector<int> getParent();
+
 };
 
 #endif

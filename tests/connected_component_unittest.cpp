@@ -65,33 +65,8 @@ TEST_F(ConnectedComponentTest, ShouldReturnCorrectNeighbours) {
 }
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectResultAfterPass1) { 
-  int i, j, north, west; 
-  int M, label; 
-
-  label = 1;
-  for (i = 0; i < 8; i++) {
-    for (j = 0; j < 8; j++) {
-      if (connected_component.getImgElement(i, j) == 1) {
-        boost::tie(north, west) = connected_component.getLabelNeighbours(i, j); 
-        if ( (north==0) && (west==0) ) {
-          M = label; label++; 
-        } 
-        else {
-          if(north == 0) {
-            M = west;
-          }
-          else if(west == 0) {
-            M = north;
-          }
-          else {
-            M = (north < west) ? north : west; 
-          }
-        }
-        connected_component.setLabelElement(i, j, M);
-      }
-    }
-  }
-
+  connected_component.runPass1(); 
+  
   EXPECT_EQ(1, connected_component.getLabelElement(0, 0));
   EXPECT_EQ(2, connected_component.getLabelElement(0, 4));
   EXPECT_EQ(3, connected_component.getLabelElement(0, 7));
@@ -99,7 +74,23 @@ TEST_F(ConnectedComponentTest, ShouldReturnCorrectResultAfterPass1) {
   EXPECT_EQ(5, connected_component.getLabelElement(4, 5));
   EXPECT_EQ(6, connected_component.getLabelElement(7, 0));
 
+  std::vector<int> parent = connected_component.getParent(); 
+
+  EXPECT_EQ(1, parent[2]); 
+  EXPECT_EQ(3, parent[7]); 
+
+  connected_component.runPass2(); 
 }
 
+TEST_F(ConnectedComponentTest, ShouldReturnCorrectLabelAfterPass2) { 
+  //must run pass1 before pass2
+  connected_component.runPass1(); 
+  connected_component.runPass2(); 
+
+  EXPECT_EQ(1, connected_component.getLabelElement(0, 4)); 
+  EXPECT_EQ(1, connected_component.getLabelElement(1, 5)); 
+  EXPECT_EQ(3, connected_component.getLabelElement(7, 5)); 
+  EXPECT_EQ(3, connected_component.getLabelElement(7, 6)); 
+}
 
 

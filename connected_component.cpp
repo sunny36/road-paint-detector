@@ -95,6 +95,17 @@ void ConnectedComponent::runPass1() {
   }
 }
 
+void ConnectedComponent::runPass2() { 
+  int i, j; 
+  for(i = 0; i < 8; i++) { 
+    for(j = 0; j < 8; j++) { 
+      if(_img[i][j] == 1) {
+        _label[i][j] = (*this)._find(_label[i][j]); 
+      }
+    }
+  }
+}
+
 void ConnectedComponent::_union(int X, int Y) {
   int j = X; 
   int k = Y; 
@@ -109,6 +120,15 @@ void ConnectedComponent::_union(int X, int Y) {
   }
 
   //std::cout << X << ", " << Y << std::endl;
+}
+
+int ConnectedComponent::_find(int X) {
+  int j = X; 
+  while (_parent[j] != 0) { 
+    j = _parent[j]; 
+  }
+
+  return j;
 }
 
 std::vector<int> ConnectedComponent::getParent() { 
