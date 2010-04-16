@@ -31,48 +31,47 @@ int ConnectedComponent::getLabelElement(int x, int y) {
   return _label[x][y];
 }
 
-boost::tuple<int, int> ConnectedComponent::getImgNeighbours(int x, int y) {
-  int north, west;  
-  if (x > 0) {
-    north = _img[x -1][y];
-  } else {
-    north = 0; 
-  }
-  if (y > 0) {
-    west = _img[x][y-1];
-  } else {
-    west = 0; 
-  }
-
-  return boost::make_tuple(north, west);
+std::vector<int> ConnectedComponent::getParent() { 
+  return _parent; 
 }
 
-boost::tuple<int, int> ConnectedComponent::getLabelNeighbours(int x, int y) {
+std::map<std::string, int> ConnectedComponent::getImgNeighbours(int x, int y) {
   int north, west; 
+  north = (x > 0) ? _img[x-1][y] : 0; 
+  west = (y > 0) ? _img[x][y-1] : 0; 
 
-  if (x > 0) {
-    north = _label[x -1][y];
-  } else {
-    north = 0; 
-  }
-  if (y > 0) {
-    west = _label[x][y-1];
-  } else {
-    west = 0; 
-  }
-
-  return boost::make_tuple(north, west);
+  std::map<std::string, int> neighbours; 
+  neighbours["north"] = north; 
+  neighbours["west"] = west; 
+ 
+  return neighbours;
 }
+
+std::map<std::string, int> ConnectedComponent::getLabelNeighbours(int x, int y) {
+  int north, west; 
+  north = (x > 0) ? _label[x-1][y] : 0; 
+  west = (y > 0) ? _label[x][y-1] : 0; 
+
+  std::map<std::string, int> neighbours; 
+  neighbours["north"] = north; 
+  neighbours["west"] = west; 
+ 
+  return neighbours;
+}
+
 
 void ConnectedComponent::runPass1() {
   int i, j, north, west; 
   int M, label; 
+  std::map<std::string, int> neighbours; 
 
   label = 1;
   for (i = 0; i < 8; i++) {
     for (j = 0; j < 8; j++) {
-      if (_img[i][j] == 1) {
-        boost::tie(north, west) = (*this).getLabelNeighbours(i, j); 
+      if ((*this).getImgElement(i, j) == 1) {
+        neighbours = (*this).getLabelNeighbours(i, j); 
+        north = neighbours["north"]; 
+        west = neighbours["west"]; 
         if ( (north==0) && (west==0) ) {
           M = label; label++; 
         } 
@@ -119,7 +118,6 @@ void ConnectedComponent::_union(int X, int Y) {
     _parent[k] = j; 
   }
 
-  //std::cout << X << ", " << Y << std::endl;
 }
 
 int ConnectedComponent::_find(int X) {
@@ -129,8 +127,4 @@ int ConnectedComponent::_find(int X) {
   }
 
   return j;
-}
-
-std::vector<int> ConnectedComponent::getParent() { 
-  return _parent; 
 }

@@ -42,26 +42,27 @@ TEST_F(ConnectedComponentTest, ShouldSetLabelValueGivenXY) {
 }
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectNeighbours) {
-  int north, west; 
-  boost::tie(north, west) = connected_component.getImgNeighbours(0, 0);
-  EXPECT_EQ(north, 0); 
-  EXPECT_EQ(west, 0);
+  std::map<std::string, int> neighbours;
 
-  boost::tie(north, west) = connected_component.getImgNeighbours(1, 3);
-  EXPECT_EQ(north, 1); 
-  EXPECT_EQ(west, 0);
+  neighbours = connected_component.getImgNeighbours(0, 0);
+  EXPECT_EQ(0, neighbours["north"]); 
+  EXPECT_EQ(0, neighbours["west"]);
 
-  boost::tie(north, west) = connected_component.getImgNeighbours(0, 6);
-  EXPECT_EQ(north, 0); 
-  EXPECT_EQ(west, 1);
+  neighbours = connected_component.getImgNeighbours(1, 3);
+  EXPECT_EQ(1, neighbours["north"]); 
+  EXPECT_EQ(0, neighbours["west"]);
 
-  boost::tie(north, west) = connected_component.getImgNeighbours(4, 4);
-  EXPECT_EQ(north, 0); 
-  EXPECT_EQ(west, 1);
+  neighbours = connected_component.getImgNeighbours(0, 6);
+  EXPECT_EQ(0, neighbours["north"]); 
+  EXPECT_EQ(1, neighbours["west"]);
 
-  boost::tie(north, west) = connected_component.getImgNeighbours(7, 7);
-  EXPECT_EQ(north, 1); 
-  EXPECT_EQ(west, 1);
+  neighbours = connected_component.getImgNeighbours(4, 4);
+  EXPECT_EQ(0, neighbours["north"]); 
+  EXPECT_EQ(1, neighbours["west"]);
+
+  neighbours = connected_component.getImgNeighbours(7, 7);
+  EXPECT_EQ(1, neighbours["north"]); 
+  EXPECT_EQ(1, neighbours["west"]);
 }
 
 TEST_F(ConnectedComponentTest, ShouldReturnCorrectResultAfterPass1) { 
