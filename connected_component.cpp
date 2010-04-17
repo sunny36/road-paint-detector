@@ -92,6 +92,7 @@ void ConnectedComponent::runPass2() {
   }
 }
 
+// Returns the minimum label which is not 0, since label starts from 1
 int ConnectedComponent::getMinNeighbours(
     std::map<std::string, int> neighbours) {
   int min; 
