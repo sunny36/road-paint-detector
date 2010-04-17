@@ -70,15 +70,7 @@ void ConnectedComponent::runPass1() {
           M = label; label++; 
         } 
         else {
-          if(north == 0) {
-            M = west;
-          }
-          else if(west == 0) {
-            M = north;
-          }
-          else {
-            M = (north < west) ? north : west; 
-          }
+          M = (*this).getMinNeighbours(neighbours);
           if ((north != M) && (north != 0)) (*this)._union(M, north);
           if (west != M && (west != 0)) (*this)._union(M, west);
         }
@@ -98,6 +90,30 @@ void ConnectedComponent::runPass2() {
     }
   }
 }
+
+int ConnectedComponent::getMinNeighbours(
+    std::map<std::string, int> neighbours) {
+  int min; 
+  if (neighbours["north"] == 0) {
+    min = neighbours["west"];
+  } else if (neighbours["west"] == 0) {
+    min = neighbours["north"];
+  } else { 
+    min = (neighbours["north"] < neighbours["west"]) ? 
+          neighbours["north"] : 
+          neighbours["west"]; 
+  }
+
+  return min; 
+}
+
+bool ConnectedComponent::minPair(
+    std::pair<std::string, int> i, std::pair<std::string, int> j) {
+  if (i.second == 0) return false;
+  if (j.second == 0) return true; 
+  return i.second < j.second; 
+}
+
 
 void ConnectedComponent::_union(int X, int Y) {
   int j = X; 

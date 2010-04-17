@@ -14,6 +14,7 @@ class ConnectedComponent {
     std::vector<int> _parent; 
     void _union(int M, int X);
     int _find(int X);
+    int getMinNeighbours(std::map<std::string, int> neighbours);
 
   public:
     ConnectedComponent();
