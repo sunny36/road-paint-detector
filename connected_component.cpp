@@ -85,7 +85,8 @@ void ConnectedComponent::runPass2() {
   for(i = 0; i < 8; i++) { 
     for(j = 0; j < 8; j++) { 
       if((*this).getImgElement(i, j) == 1) {
-        (*this).setLabelElement(i, j, (*this)._find((*this).getLabelElement(i, j))); 
+        (*this).setLabelElement(i, j, 
+                                (*this)._find((*this).getLabelElement(i, j))); 
       }
     }
   }
