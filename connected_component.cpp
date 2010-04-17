@@ -60,8 +60,8 @@ void ConnectedComponent::runPass1() {
   std::map<std::string, int> neighbours; 
 
   label = 1;
-  for (i = 0; i < 8; i++) {
-    for (j = 0; j < 8; j++) {
+  for (i = 0; i < _img.rows; i++) {
+    for (j = 0; j < _img.cols; j++) {
       if ((*this).getImgElement(i, j) == 1) {
         neighbours = (*this).getLabelNeighbours(i, j); 
         north = neighbours["north"]; 
@@ -106,14 +106,6 @@ int ConnectedComponent::getMinNeighbours(
 
   return min; 
 }
-
-bool ConnectedComponent::minPair(
-    std::pair<std::string, int> i, std::pair<std::string, int> j) {
-  if (i.second == 0) return false;
-  if (j.second == 0) return true; 
-  return i.second < j.second; 
-}
-
 
 void ConnectedComponent::_union(int X, int Y) {
   int j = X; 
