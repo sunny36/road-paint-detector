@@ -90,3 +90,52 @@ bool Convolution::isEven(int width){
   return (width % 2 == 0) ? true : false; 
 }
 
+void Convolution::localMaximaSuppression(const std::vector<float> image_row,
+                                         std::vector<float>& local_maxima) {
+
+  int i; 
+  for (i = 0; i < static_cast<int>(image_row.size()); ++i) { 
+    local_maxima[i] = 0.0; 
+  }
+  for(i = 0; i < static_cast<int>(image_row.size()); i++){
+    //first pixel
+    if(i == 0){ 
+      if(image_row[i] > image_row[i+1]){
+        local_maxima[i] = image_row[i];
+        local_maxima[i+1] = 0.0;
+      }
+      else if(image_row[i] < image_row[i+1]){
+        local_maxima[i] = 0.0;
+        local_maxima[i+1] = image_row[i];
+      }	
+    } 
+
+    //pixels between first and last 
+    if(i > 0 && i <  static_cast<int>(image_row.size())- 1){
+      if(image_row[i] > image_row[i-1] && image_row[i] > image_row[i+1]){
+        local_maxima[i] = image_row[i];
+        local_maxima[i-1] = 0.0;
+        local_maxima[i+1] = 0.0;
+      }
+      if(image_row[i] < image_row[i-1] && image_row[i] < image_row[i+1]){
+        local_maxima[i] = 0.0;
+        local_maxima[i-1] = image_row[i];
+        local_maxima[i+1] = image_row[i];
+      }
+    }
+
+    //last pixel
+    if( i == static_cast<int>(image_row.size()) - 1 ){
+      if(image_row[i] > image_row[i-1]){
+        local_maxima[i] = image_row[i];
+      }
+      else if(image_row[i] < image_row[i-1]){
+        local_maxima[i] = 0.0;
+      }				
+    }
+
+  }
+
+  return; 
+}
+

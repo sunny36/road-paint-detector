@@ -13,7 +13,9 @@ class Convolution{
       void convolve1D(std::vector<int> in, std::vector<float> kernel,
                       std::vector<float>& out);
       void kernel1D(int width, std::vector<float>& kernel);
-  private:
+      void localMaximaSuppression(const std::vector<float> image_row,
+                                  std::vector<float>& local_maxima);
+ private:
 		bool isEven(int width);
 };
 
