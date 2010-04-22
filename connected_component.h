@@ -19,7 +19,7 @@ class ConnectedComponent {
     int getLabelElement(int x, int y);
     cv::Mat getLabel(); 
     std::map<std::string, int> getImgNeighbours(int x, int y);
-    std::map<std::string, int> getLabelNeighbours(int x, int y);
+    std::vector<int> getLabelNeighbours(int x, int y);
     void runPass1();
     void runPass2();
     std::vector<int> getParent();
@@ -29,11 +29,11 @@ class ConnectedComponent {
     cv::Mat _img; 
     cv::Mat _label; 
     std::vector<int> _parent; 
-    ConnectedComponent::Algorithm _algorithm; 
+    Algorithm _algorithm; 
     void _union(int M, int X);
     int _find(int X);
-    int getMinNeighbours(std::map<std::string, int> neighbours);
-
+    int getMinNeighbours(std::vector<int> neighbours);
+    std::vector<int> FourPoint(int x, int y);
 };
 
 #endif
