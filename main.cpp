@@ -24,6 +24,8 @@ int main(int argc, char** argv){
   std::vector<float> normalized(640);
   std::vector<float> local_maxima(640);
   Convolution convolution;
+  FILE *fp;
+  int k;
   for (row = 0; row < img->height; row++) {
     Y = calculateY(P, row);
     width = calculateWidthInPixels(P, Y);
@@ -83,7 +85,7 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
-      normalization(out, normalized, img->width, width);
+      convolution.normalization(out, normalized, img->width, width);
 #if defined(DEBUG)
       if(row == ROW_DEBUG) {
         fp = fopen("normalization.txt", "wt");
@@ -94,7 +96,7 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
-      localMaximaSuppression(normalized, local_maxima, img->width);
+      convolution.localMaximaSuppression(normalized, local_maxima);
 #if defined(DEBUG)
       if(row == ROW_DEBUG) {
         fp = fopen("localmaxima.txt", "wt");
@@ -115,11 +117,15 @@ int main(int argc, char** argv){
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
+      if (local_maxima[col] > 0) {
+        local_maxima[col] = 255;
+      }
       scalar.val[0] = local_maxima[col];
       cvSet2D(img, row, col, scalar);
     }
   } // end for loop
 
+  cvSaveImage("localmaxima.png", img);
   Contour contour;
   contour.findContours(img, camera);
   img = contour.drawContours();
@@ -191,86 +197,4 @@ float calculateY(CvMat* P, int current_row){
   Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
   return Y;
 }
-
-void localMaximaSuppression(const std::vector<float> image_row,
-                            std::vector<float>& local_maxima,
-                            int row_size){
-  int i; 
-  float* image_row_suppressed;
-  image_row_suppressed = (float*)calloc(sizeof(float), row_size);
-
-  for(i = 0; i < row_size; i++){
-    //first pixel
-    if(i == 0){ 
-      if(image_row[i] > image_row[i+1]){
-        image_row_suppressed[i] = image_row[i];
-        image_row_suppressed[i+1] = 0.0;
-      }
-      else if(image_row[i] < image_row[i+1]){
-        image_row_suppressed[i] = 0.0;
-        image_row_suppressed[i+1] = image_row[i];
-      }	
-    } 
-
-    //pixels between first and last 
-    if(i > 0 && i < row_size - 1){
-      if(image_row[i] > image_row[i-1] && image_row[i] > image_row[i+1]){
-        image_row_suppressed[i] = image_row[i];
-        image_row_suppressed[i-1] = 0.0;
-        image_row_suppressed[i+1] = 0.0;
-      }
-      if(image_row[i] < image_row[i-1] && image_row[i] < image_row[i+1]){
-        image_row_suppressed[i] = 0.0;
-        image_row_suppressed[i-1] = image_row[i];
-        image_row_suppressed[i+1] = image_row[i];
-      }
-    }
-
-    //last pixel
-    if( i == row_size - 1 ){
-      if(image_row[i] > image_row[i-1]){
-        image_row_suppressed[i] = image_row[i];
-      }
-      else if(image_row[i] < image_row[i-1]){
-        image_row_suppressed[i] = 0.0;
-      }				
-    }
-
-  }
-
-  //copy value from image_row_suppressed to image_row
-  for(i = 0; i < row_size; i++){
-    local_maxima[i] = image_row_suppressed[i];
-  }
-  free(image_row_suppressed);
-  return; 
-}
-
-void normalization(const std::vector<float> out, 
-                   std::vector<float>& normalized,
-                   int n, 
-                   int lane_width){
-  float max = 0.0;
-  int i; 
-/* for(i = 0; i < n; i++){*/
-    //(out[i] > max) ? max = out[i] : max = max;
-/* }*/
-  max = 255 * lane_width;
-  float cut_off = 0.1 *  max; 
-  for(i = 0; i < n; i++){
-    (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
-  }
-  for(i = 0; i < n; i++){
-    normalized[i] = (normalized[i] / (255 * lane_width)) * 255;
-  }
-}
-
-void plotGraph(const char* filename){
-  FILE *pipe = popen("gnuplot -persist","w");
-
-  fprintf(pipe, "plot '%s' with lines", filename);
-  pclose(pipe); 
-}
-
-
 

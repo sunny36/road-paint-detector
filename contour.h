@@ -4,11 +4,11 @@
 #include <highgui.h>
 #include <cv.h>
 #include "debug.h"
-#include <fstream>
 #include <string>
 #include <vector>
 #include <iostream> 
 #include "camera.h"
+#include "io.h"
 
 class Contour{
 
@@ -23,14 +23,19 @@ class Contour{
   	CvMemStorage* storage;
 	  CvSeq* contours; 
     IplImage* copied_image;
-    void printContours(CvSeq* contours, 
-                       std::string filename);
-    void printContours(std::vector< std::vector<CvPoint2D32f> > contours, 
-                       const std::string filename);
     void removeUnwantedContour();
     void removeDuplicatesInContours(CvSeq* contours);
     void scaleGroundPlaneSequences(std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences);
     void drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences);
+    void getImagePlaneSequences(CvSeq **contours, 
+                                std::vector< std::vector <CvPoint> >& image_plane_sequences);
+    void connectNearComponents(std::vector< std::vector<CvPoint> >& image_plane_sequences);
+    CvPoint minY(std::vector<CvPoint> points);
+    CvPoint maxY(std::vector<CvPoint> points);
+    void image2GroundPlaneSequences(
+      const std::vector< std::vector<CvPoint> >& image_plane_sequences,
+      std::vector< std::vector<CvPoint2D32f> >& ground_plane_sequences,
+      Camera& camera);
 
 };
 
