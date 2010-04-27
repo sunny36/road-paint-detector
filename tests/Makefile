@@ -14,7 +14,7 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-GTEST_DIR = /home/somchok/src/gtest-1.4.0
+GTEST_DIR = /Users/somchok/src/gtest-1.4.0
 
 # Where to find user code.
 USER_DIR = ..
@@ -27,7 +27,7 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = convolution_unittest camera_unittest
+TESTS = convolution_unittest camera_unittest connected_component_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -38,8 +38,6 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 #OpenCV headers
 OPENCV_INCL = -I/usr/local/include/opencv
 OPENCV_LIBS = -L/usr/local/lib -lcxcore -lcv -lhighgui -lcvaux -lml 
-#Built OpenCV in 32bit mode
-ARCH = -m32
 ##############################################################################
 
 # House-keeping build targets.
@@ -60,10 +58,10 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # conservative and not optimized.  This is fine as Google Test
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
-	$(CXX) $(ARCH) $(CPPFLAGS) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
+	$(CXX)  $(CPPFLAGS) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
-	$(CXX) $(ARCH) $(CPPFLAGS) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest_main.cc
+	$(CXX)  $(CPPFLAGS) $(CXXFLAGS) -c $(GTEST_DIR)/src/gtest_main.cc
 
 gtest.a : gtest-all.o
 	$(AR) $(ARFLAGS) $@ $^
@@ -74,28 +72,42 @@ gtest_main.a : gtest-all.o gtest_main.o
 ##############################################################################
 convolution.o : $(USER_DIR)/convolution.cpp $(USER_DIR)/convolution.h \
   							$(GTEST_HEADERS)
-	$(CXX) $(ARCH) $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/convolution.cpp
+	$(CXX)  $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/convolution.cpp
 
 convolution_unittest.o : convolution_unittest.cpp \
                       	 $(USER_DIR)/convolution.h $(GTEST_HEADERS)
-	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
+	$(CXX)   $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
 	convolution_unittest.cpp 
 
 convolution_unittest : convolution.o convolution_unittest.o gtest_main.a
-	$(CXX)  $(ARCH) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+	$(CXX)   $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 ##############################################################################
 
 ##############################################################################
 camera.o : $(USER_DIR)/camera.cpp $(USER_DIR)/camera.h \
   							$(GTEST_HEADERS)
-	$(CXX) $(ARCH) $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/camera.cpp
+	$(CXX)  $(OPENCV_INCL)  $(CXXFLAGS) -c $(USER_DIR)/camera.cpp
 
 camera_unittest.o : camera_unittest.cpp \
                       	 $(USER_DIR)/camera.h $(GTEST_HEADERS)
-	$(CXX)  $(ARCH) $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
+	$(CXX)   $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
 	camera_unittest.cpp 
 
 camera_unittest : camera.o camera_unittest.o gtest_main.a
-	$(CXX)  $(ARCH) $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+	$(CXX)   $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+##############################################################################
+
+##############################################################################
+connected_component.o : $(USER_DIR)/connected_component.cpp $(USER_DIR)/connected_component.h \
+  							$(GTEST_HEADERS)
+	$(CXX)  $(OPENCV_INCL) $(CXXFLAGS) -c $(USER_DIR)/connected_component.cpp
+
+connected_component_unittest.o : connected_component_unittest.cpp \
+                      	 $(USER_DIR)/connected_component.h $(GTEST_HEADERS)
+	$(CXX)   $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
+	connected_component_unittest.cpp 
+
+connected_component_unittest : connected_component.o connected_component_unittest.o gtest_main.a
+	$(CXX)   $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 ##############################################################################
 
