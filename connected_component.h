@@ -12,12 +12,13 @@ class ConnectedComponent {
 
   public:
     ConnectedComponent();
-    enum Algorithm {FOUR_POINT, TWENTY_ONE_POINT};
-    void setImage(cv::Mat img, ConnectedComponent::Algorithm algorithm);
+    enum Algorithm {FOUR_POINT, NINE_POINT};
+    void setImage(IplImage* img, ConnectedComponent::Algorithm algorithm);
     int getImgElement(int x, int y); 
     void setLabelElement(int x, int y, int value);
     int getLabelElement(int x, int y);
-    cv::Mat getLabel(); 
+    CvMat* getLabel(); 
+    cv::Mat* getImg(); 
     std::map<std::string, int> getImgNeighbours(int x, int y);
     std::vector<int> getLabelNeighbours(int x, int y);
     void runPass1();
@@ -26,14 +27,15 @@ class ConnectedComponent {
     ConnectedComponent::Algorithm getAlgorithm();
 
   private:
-    cv::Mat _img; 
-    cv::Mat _label; 
+    IplImage* _img; 
+    CvMat* _label; 
     std::vector<int> _parent; 
     Algorithm _algorithm; 
     void _union(int M, int X);
     int _find(int X);
     int getMinNeighbours(std::vector<int> neighbours);
     std::vector<int> FourPoint(int x, int y);
+    std::vector<int> NinePoint(int x, int y); 
 };
 
 #endif

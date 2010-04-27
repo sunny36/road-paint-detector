@@ -3,12 +3,14 @@
 ConnectedComponent::ConnectedComponent() {
 }
 
-void ConnectedComponent::setImage(cv::Mat img, 
+void ConnectedComponent::setImage(IplImage* img, 
                                   Algorithm algorithm) {
   (*this)._algorithm = algorithm;
-  (*this)._img = img.clone(); 
-  (*this)._label = cv::Mat::zeros((*this)._img.rows, (*this)._img.cols, CV_32S); 
-  _parent.resize((*this)._img.rows * (*this)._img.cols); 
+  (*this)._img = cvCloneImage(img); 
+
+  (*this)._label = cvCreateMat((*this)._img->height, (*this)._img->width, CV_16UC1); 
+  cvSetZero((*this)._label);
+  _parent.resize((*this)._img->height * (*this)._img->width); 
   for (int i = 0; i < static_cast<int>(_parent.size()); i++) {
     _parent[i] = 0; 
   }
@@ -19,16 +21,22 @@ ConnectedComponent::Algorithm ConnectedComponent::getAlgorithm() {
 }
 
 int ConnectedComponent::getImgElement(int x, int y) {
-  return _img.at<int>(x, y);
+  CvScalar scalar; 
+  scalar = cvGet2D(_img, x, y);
+  return scalar.val[0]; 
 }
 
 void ConnectedComponent::setLabelElement(int x, int y, int value) {
-  (*this)._label.at<int>(x, y) = value;
-  return;
+  CvScalar scalar; 
+  scalar.val[0] = value; 
+  cvSet2D((*this)._label, x, y, scalar); 
+  return; 
 }
 
 int ConnectedComponent::getLabelElement(int x, int y) {
-  return (*this)._label.at<int>(x, y);
+  CvScalar scalar; 
+  scalar = cvGet2D(_label, x, y); 
+  return scalar.val[0]; 
 }
 
 std::vector<int> ConnectedComponent::getParent() { 
@@ -48,10 +56,11 @@ std::map<std::string, int> ConnectedComponent::getImgNeighbours(int x, int y) {
 }
 
 std::vector<int> ConnectedComponent::getLabelNeighbours(int x, int y) {
-  if((*this).getAlgorithm() == FOUR_POINT) {  
+  if((*this)._algorithm == FOUR_POINT) { 
     return (*this).FourPoint(x, y); 
-  } else {
-    return (*this).FourPoint(x, y); 
+  }
+  else { 
+    return (*this).NinePoint(x, y); 
   }
 }
 
@@ -63,21 +72,31 @@ std::vector<int> ConnectedComponent::FourPoint(int x, int y) {
 }
 
 std::vector<int> ConnectedComponent::NinePoint(int x, int y) { 
-  std::vector<int> neighbours(10);
+  std::vector<int> neighbours(9);
+  std::vector<int>::iterator it; 
+  int iNeighbours = -4; //extreme left is y - 4
 
-  neighbours[0] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[1] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[2] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[3] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
+  neighbours[0] = ((x > 0) && (y > 3)) ? 
+                  (*this).getLabelElement(x - 1, y - 4) : 0; 
+  neighbours[1] = ((x > 0) && (y > 2)) ? 
+                  (*this).getLabelElement(x - 1, y - 3) : 0; 
+  neighbours[2] = ((x > 0) && (y > 1)) ? 
+                  (*this).getLabelElement(x - 1, y - 2) : 0; 
+  neighbours[3] = ((x > 0) && (y > 0)) ? 
+                  (*this).getLabelElement(x - 1, y - 1) : 0; 
 
-  neighbours[4] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
+  neighbours[4] = (x > 0)  ? (*this).getLabelElement(x - 1, y) : 0; 
 
-  neighbours[5] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[6] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[7] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
-  neighbours[8] = (x > 0) ? (*this).getLabelElement(x-1, y) : 0; 
+  neighbours[5] = ((x > 0) && (y < 639)) ? 
+                  (*this).getLabelElement(x - 1, y + 1) : 0; 
+  neighbours[6] = ((x > 0) && (y < 638)) ? 
+                  (*this).getLabelElement(x - 1, y + 2) : 0; 
+  neighbours[7] = ((x > 0) && (y < 637)) ? 
+                  (*this).getLabelElement(x - 1, y + 3) : 0; 
+  neighbours[8] = ((x > 0) && (y < 636)) ? 
+                  (*this).getLabelElement(x - 1, y + 4) : 0; 
 
-  return neighbours
+  return neighbours;
 }
 
 void ConnectedComponent::runPass1() {
@@ -86,9 +105,9 @@ void ConnectedComponent::runPass1() {
   std::vector<int> neighbours; 
 
   label = 1;
-  for (i = 0; i < _img.rows; i++) {
-    for (j = 0; j < _img.cols; j++) {
-      if ((*this).getImgElement(i, j) != 0) {
+  for (i = 0; i < _img->height; i++) {
+    for (j = 0; j < _img->width; j++) {
+      if ((*this).getImgElement(i, j) != 0 ) {
         neighbours = (*this).getLabelNeighbours(i, j); 
         std::vector<int>::iterator it; 
         bool no_label = true; 
@@ -117,8 +136,8 @@ void ConnectedComponent::runPass1() {
 
 void ConnectedComponent::runPass2() { 
   int i, j; 
-  for(i = 0; i < 8; i++) { 
-    for(j = 0; j < 8; j++) { 
+  for(i = 0; i < _img->height; i++) { 
+    for(j = 0; j < _img->width; j++) { 
       if((*this).getImgElement(i, j) != 0) {
         (*this).setLabelElement(i, j, 
                                 (*this)._find((*this).getLabelElement(i, j))); 
@@ -163,6 +182,8 @@ int ConnectedComponent::_find(int X) {
   return j;
 }
 
-cv::Mat ConnectedComponent::getLabel() { 
+CvMat* ConnectedComponent::getLabel() { 
   return _label; 
 }
+
+
