@@ -90,6 +90,22 @@ bool Convolution::isEven(int width){
   return (width % 2 == 0) ? true : false; 
 }
 
+void Convolution::normalization(const std::vector<float> out, 
+                                std::vector<float>& normalized,
+                                int n, int lane_width){
+  float max = 0.0;
+  int i; 
+  max = 255 * lane_width;
+  float cut_off = 0.15 *  max; 
+  for(i = 0; i < n; i++){
+    (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
+  }
+  for(i = 0; i < n; i++){
+    normalized[i] = (normalized[i] / (255 * lane_width)) * 255;
+  }
+  return;
+}
+
 void Convolution::localMaximaSuppression(const std::vector<float> image_row,
                                          std::vector<float>& local_maxima) {
 
@@ -112,6 +128,26 @@ void Convolution::localMaximaSuppression(const std::vector<float> image_row,
 
     //pixels between first and last 
     if(i > 0 && i <  static_cast<int>(image_row.size())- 1){
+     if (image_row[i] == image_row[i+1]) { 
+        int k = i + 1; 
+        while(image_row[k] == image_row[i]) { 
+          k++; 
+        }
+        int number_of_pixels = 0; 
+        int sum_of_pixels = 0;
+        if(image_row[k] < image_row[i]) { 
+          for (int j = i; j < k - 1; ++j) { 
+            sum_of_pixels += j;
+            number_of_pixels++;
+          }
+          int center_location = sum_of_pixels / number_of_pixels; 
+          local_maxima[center_location] = image_row[i]; 
+          for (int j = i; j < center_location; ++j) { 
+            local_maxima[j] = 0; 
+          }
+          i = k - 1; //reset i
+        }
+     }
       if(image_row[i] > image_row[i-1] && image_row[i] > image_row[i+1]){
         local_maxima[i] = image_row[i];
         local_maxima[i-1] = 0.0;
@@ -138,4 +174,5 @@ void Convolution::localMaximaSuppression(const std::vector<float> image_row,
 
   return; 
 }
+
 

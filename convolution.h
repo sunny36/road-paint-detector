@@ -15,6 +15,9 @@ class Convolution{
       void kernel1D(int width, std::vector<float>& kernel);
       void localMaximaSuppression(const std::vector<float> image_row,
                                   std::vector<float>& local_maxima);
+      void normalization(const std::vector<float> out, 
+                         std::vector<float>& normalized,int n, int lane_width);
+
  private:
 		bool isEven(int width);
 };

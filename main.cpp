@@ -24,6 +24,8 @@ int main(int argc, char** argv){
   std::vector<float> normalized(640);
   std::vector<float> local_maxima(640);
   Convolution convolution;
+  FILE *fp;
+  int k;
   for (row = 0; row < img->height; row++) {
     Y = calculateY(P, row);
     width = calculateWidthInPixels(P, Y);
@@ -83,7 +85,7 @@ int main(int argc, char** argv){
         fclose(fp);
       }
 #endif
-      normalization(out, normalized, img->width, width);
+      convolution.normalization(out, normalized, img->width, width);
 #if defined(DEBUG)
       if(row == ROW_DEBUG) {
         fp = fopen("normalization.txt", "wt");
@@ -115,7 +117,7 @@ int main(int argc, char** argv){
     }
     for (col = 0; col < img->width; col++) {
       CvScalar scalar;
-      if (local_maxima[col] > 1) {
+      if (local_maxima[col] > 0) {
         local_maxima[col] = 255;
       }
       scalar.val[0] = local_maxima[col];
@@ -123,7 +125,7 @@ int main(int argc, char** argv){
     }
   } // end for loop
 
-  cvSaveImage("output.jpg", img);
+  cvSaveImage("localmaxima.png", img);
   Contour contour;
   contour.findContours(img, camera);
   img = contour.drawContours();
@@ -194,32 +196,5 @@ float calculateY(CvMat* P, int current_row){
   P_22 = cvmGet(P, 1,1);
   Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
   return Y;
-}
-
-
-void normalization(const std::vector<float> out, 
-                   std::vector<float>& normalized,
-                   int n, 
-                   int lane_width){
-  float max = 0.0;
-  int i; 
-/* for(i = 0; i < n; i++){*/
-    //(out[i] > max) ? max = out[i] : max = max;
-/* }*/
-  max = 255 * lane_width;
-  float cut_off = 0.1 *  max; 
-  for(i = 0; i < n; i++){
-    (out[i] < cut_off) ? normalized[i] = 0.0 : normalized[i] = out[i];
-  }
-  for(i = 0; i < n; i++){
-    normalized[i] = (normalized[i] / (255 * lane_width)) * 255;
-  }
-  //for ( i = 0; i < n; ++i) { 
-    //if (normalized[i] > 250) { 
-      //normalized[i] = 255; 
-    //} else { 
-      //normalized[i] = 0.0; 
-    //}
-  //}
 }
 
