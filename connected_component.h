@@ -25,7 +25,7 @@ class ConnectedComponent {
     void runPass2();
     std::vector<int> getParent();
     ConnectedComponent::Algorithm getAlgorithm();
-    std::map<int, std::vector<CvPoint> > get_connected_component();
+    std::vector<std::vector<CvPoint> > get_connected_component();
 
   private:
     IplImage* _img; 

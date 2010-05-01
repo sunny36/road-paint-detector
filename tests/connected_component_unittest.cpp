@@ -199,15 +199,15 @@ TEST_F(ImageDataTest, TestGetConnectedComponent) {
   connected_component.runPass2(); 
 
 
-  std::map<int, std::vector<CvPoint> > sequences; 
-  std::map<int, std::vector<CvPoint> >::iterator it; 
+  std::vector<std::vector<CvPoint> > sequences; 
+  std::vector<std::vector<CvPoint> >::iterator it; 
   sequences =   connected_component.get_connected_component(); 
-
+  int i = 0; 
   for (it = sequences.begin(); it != sequences.end(); ++it) { 
-    std::cout << "Number #" << (*it).first << std::endl; 
+    std::cout << "Number #" << i++ << std::endl; 
     std::vector<CvPoint> points; 
     std::vector<CvPoint>::iterator it_points; 
-    points = (*it).second; 
+    points = *it; 
     for (it_points = points.begin(); it_points != points.end(); ++it_points) { 
       std::cout << "(" << (*it_points).x << "," << (*it_points).y << ")" 
                 << std::endl; 
