@@ -4,3 +4,10 @@ images/*
 *.png 
 *.jpg 
 tests/*.png
+*.o
+tests/*.o
+tests/*.a
+\#*#
+main
+ground_planes_sequences
+tests/connected_component_unittest
