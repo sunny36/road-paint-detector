@@ -6,12 +6,15 @@ all: main
 
 debug: CXX += -DDEBUG -g 
 debug: all 
-	
-main: main.cpp main.h connected_component.o convolution.o camera.o io.o 
+
+main: main.cpp main.h connected_component.o util.o convolution.o camera.o io.o 
 	$(CXX) $(WARN) $(INCL) $(LIBS)  $^ -o $@
 
 connected_component.o: connected_component.cpp connected_component.h
 	$(CXX) $(WARN) $(INCL)  -g -c connected_component.cpp -o $@
+
+util.o: util.cpp util.h
+	$(CXX) $(WARN) $(INCL)  -g -c util.cpp -o $@
 
 convolution.o: convolution.cpp convolution.h
 	$(CXX) $(WARN) $(INCL)  -g -c convolution.cpp -o $@
