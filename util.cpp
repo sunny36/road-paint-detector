@@ -45,8 +45,8 @@ void Util::draw_ground_points(
           cvRound(ground_plane_sequences[i][j].y) >= 0 &&
           cvRound(ground_plane_sequences[i][j].y) < 480) {
 
-        cvSet2D(ground_points, cvRound(ground_plane_sequences[i][j].x), 
-                cvRound(ground_plane_sequences[i][j].y), value);  
+        cvSet2D(ground_points, cvRound(ground_plane_sequences[i][j].y), 
+                cvRound(ground_plane_sequences[i][j].x), value);  
       }
     }
   }
@@ -93,6 +93,6 @@ void Util::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequ
 
     free(points); 
   }
-
+  cvSaveImage("fit_line.png", image_lines);
   cvShowImage("fitline", image_lines); 
 }
