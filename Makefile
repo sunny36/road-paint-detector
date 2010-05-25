@@ -7,8 +7,12 @@ all: main
 debug: CXX += -DDEBUG -g 
 debug: all 
 
-main: main.cpp main.h connected_component.o util.o convolution.o camera.o io.o 
+main: main.cpp main.h line.o connected_component.o util.o convolution.o \
+			camera.o io.o
 	$(CXX) $(WARN) $(INCL) $(LIBS)  $^ -o $@
+
+line.o: line.cpp line.h
+	$(CXX) $(WARN) $(INCL)  -g -c line.cpp -o $@
 
 connected_component.o: connected_component.cpp connected_component.h
 	$(CXX) $(WARN) $(INCL)  -g -c connected_component.cpp -o $@
