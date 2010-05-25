@@ -187,3 +187,33 @@ CvMat* ConnectedComponent::getLabel() {
 }
 
 
+std::vector<std::vector<CvPoint> > ConnectedComponent::get_connected_component() {
+  int i, j; 
+  std::map<int, std::vector<CvPoint> > label_to_points; 
+  std::map<int, std::vector<CvPoint> >::iterator it; 
+  int label_value; 
+
+  for (i = 0; i < (*this)._label->height; ++i) {
+    for (j = 0; j < (*this)._label->width; ++j) {
+      label_value = (*this).getLabelElement(i, j);
+      if (label_value != 0) {
+        it = label_to_points.find(label_value); 
+        if (it == label_to_points.end()) {
+          //key not found
+          std::vector<CvPoint> point; 
+          point.push_back(cvPoint(i, j)); 
+          label_to_points[label_value] = point; 
+        } else {
+          //key found
+          (*it).second.push_back(cvPoint(i, j)); 
+        }
+      }
+    }
+  }
+  std::vector<std::vector<CvPoint> > sequence_of_points; 
+  for(it = label_to_points.begin(); it != label_to_points.end(); ++it) { 
+    std::vector<CvPoint> points = (*it).second; 
+    sequence_of_points.push_back(points); 
+  }
+  return sequence_of_points; 
+}

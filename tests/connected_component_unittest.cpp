@@ -193,3 +193,26 @@ TEST_F(ImageDataTest, ShouldReturnConnectedComponent) {
   label_value = cvGet2D(label, 362, 429); 
   std::cout << label_value.val[0] <<  std::endl; 
 }
+
+TEST_F(ImageDataTest, TestGetConnectedComponent) { 
+  connected_component.runPass1(); 
+  connected_component.runPass2(); 
+
+
+  std::vector<std::vector<CvPoint> > sequences; 
+  std::vector<std::vector<CvPoint> >::iterator it; 
+  sequences =   connected_component.get_connected_component(); 
+  int i = 0; 
+  for (it = sequences.begin(); it != sequences.end(); ++it) { 
+    std::cout << "Number #" << i++ << std::endl; 
+    std::vector<CvPoint> points; 
+    std::vector<CvPoint>::iterator it_points; 
+    points = *it; 
+    for (it_points = points.begin(); it_points != points.end(); ++it_points) { 
+      std::cout << "(" << (*it_points).x << "," << (*it_points).y << ")" 
+                << std::endl; 
+    }
+    std::cout << std::endl; 
+  }
+}
+

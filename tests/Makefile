@@ -27,12 +27,13 @@ CXXFLAGS += -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = convolution_unittest camera_unittest connected_component_unittest
+TESTS = line_unittest convolution_unittest camera_unittest \
+				connected_component_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
+								$(GTEST_DIR)/include/gtest/internal/*.h
 
 ############################## Custom Variables ##############################
 #OpenCV headers
@@ -98,16 +99,30 @@ camera_unittest : camera.o camera_unittest.o gtest_main.a
 ##############################################################################
 
 ##############################################################################
-connected_component.o : $(USER_DIR)/connected_component.cpp $(USER_DIR)/connected_component.h \
-  							$(GTEST_HEADERS)
+connected_component.o : $(USER_DIR)/connected_component.cpp \
+												$(USER_DIR)/connected_component.h $(GTEST_HEADERS)
 	$(CXX)  $(OPENCV_INCL) $(CXXFLAGS) -c $(USER_DIR)/connected_component.cpp
 
 connected_component_unittest.o : connected_component_unittest.cpp \
-                      	 $(USER_DIR)/connected_component.h $(GTEST_HEADERS)
+                      					 $(USER_DIR)/connected_component.h \
+																 $(GTEST_HEADERS)
 	$(CXX)   $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c \
 	connected_component_unittest.cpp 
 
-connected_component_unittest : connected_component.o connected_component_unittest.o gtest_main.a
+connected_component_unittest : connected_component.o \
+															connected_component_unittest.o gtest_main.a
 	$(CXX)   $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
+##############################################################################
+
+##############################################################################
+line.o : $(USER_DIR)/line.cpp $(USER_DIR)/line.h $(GTEST_HEADERS)
+	$(CXX) $(OPENCV_INCL) $(CXXFLAGS) -c $(USER_DIR)/line.cpp
+
+line_unittest.o : line_unittest.cpp \
+									$(USER_DIR)/line.h $(GTEST_HEADERS)
+	$(CXX)   $(OPENCV_INCL) $(CPPFLAGS) $(CXXFLAGS) -c line_unittest.cpp 
+
+line_unittest : line.o line_unittest.o gtest_main.a
+	$(CXX) $(OPENCV_INCL) $(OPENCV_LIBS) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
 ##############################################################################
 

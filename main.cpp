@@ -126,9 +126,28 @@ int main(int argc, char** argv){
   } // end for loop
 
   cvSaveImage("localmaxima.png", img);
-  Contour contour;
-  contour.findContours(img, camera);
-  img = contour.drawContours();
+
+  ConnectedComponent connected_component; 
+  ConnectedComponent::Algorithm algorithm = ConnectedComponent::NINE_POINT; 
+  connected_component.setImage(img, algorithm); 
+  connected_component.runPass1(); 
+  connected_component.runPass2(); 
+  std::vector<std::vector<CvPoint> > image_plane_sequences;
+  image_plane_sequences = connected_component.get_connected_component(); 
+
+  Util util; 
+  std::vector<std::vector<CvPoint2D32f> > ground_plane_sequences;
+  util.image_to_ground_plane(image_plane_sequences, 
+                             ground_plane_sequences,
+                             camera); 
+  IO io; 
+  io.printContours(ground_plane_sequences, "ground_planes_sequences"); 
+
+  util.scale_ground_plane_sequences(ground_plane_sequences); 
+  io.printContours(ground_plane_sequences, "scale_ground_plane_sequences"); 
+  util.drawLines(ground_plane_sequences); 
+  util.draw_ground_points(ground_plane_sequences); 
+
   cvShowImage("MIT Road Paint Detector", img);     
 
   cvWaitKey(0);
@@ -197,4 +216,5 @@ float calculateY(CvMat* P, int current_row){
   Y = (current_row*P_34 - P_24) / (P_22 - current_row*P_32);		
   return Y;
 }
+
 
