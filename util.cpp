@@ -8,8 +8,8 @@ void Util::image_to_ground_plane(
   for (i = 0; i < static_cast<int>(image_plane_sequences.size()); i++) {
     std::vector<CvPoint2D32f> sequence;
     for (j = 0; j < static_cast<int>(image_plane_sequences[i].size()); j++) {
-     CvPoint2D32f ground_pt = camera.imageToGroundPlane(image_plane_sequences[i][j]); 
-     sequence.push_back(ground_pt);
+      CvPoint2D32f ground_pt = camera.imageToGroundPlane(image_plane_sequences[i][j]); 
+      sequence.push_back(ground_pt);
     }
     ground_plane_sequences.push_back(sequence);
   }
@@ -18,7 +18,7 @@ void Util::image_to_ground_plane(
 }
 
 void Util::scale_ground_plane_sequences(
-  std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
+    std::vector< std::vector <CvPoint2D32f> >& ground_plane_sequences){
 
   int i, j; 
   for (i = 0; i < static_cast<int>(ground_plane_sequences.size()); i++) {
@@ -53,7 +53,7 @@ void Util::draw_ground_points(
   cvShowImage("ground_points", ground_points); 
 
 }
-  
+
 void Util::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequences){
 
   IplImage* image_lines = cvCreateImage(cvSize(640, 480), 8, 3);
@@ -80,7 +80,7 @@ void Util::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequ
     c = points[0].y - d*points[0].x; 
     f = d; 
     e = points[ground_plane_sequences[i].size() - 1].y - 
-       f*points[ground_plane_sequences[i].size() - 1].x; 
+        f*points[ground_plane_sequences[i].size() - 1].x; 
     left.x = (a - c) / (d - b); 
     left.y = c + d * left.x; 
     right.x = (a - e) / (f - b); 
@@ -96,3 +96,4 @@ void Util::drawLines(std::vector< std::vector <CvPoint2D32f> > ground_plane_sequ
   cvSaveImage("fit_line.png", image_lines);
   cvShowImage("fitline", image_lines); 
 }
+
