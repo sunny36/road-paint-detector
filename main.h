@@ -11,7 +11,8 @@
 #include "io.h"
 #include "camera.h"
 #include "convolution.h"
-#include "contour.h"
+#include "connected_component.h"
+#include "util.h"
 #include "debug.h"
 
 /* Constants */
